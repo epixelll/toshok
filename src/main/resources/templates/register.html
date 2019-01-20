@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="author" content="INSPIRO"/>
+    <meta name="description" content="Themeforest Template Polo"> <!-- Document title --> <title>POLO | The
+    Multi-Purpose HTML5 Template</title> <!-- Stylesheets & Fonts -->
+
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,800,700,600|Montserrat:400,500,600,700|Raleway:100,300,600,700,800"
+
+    <link th:href="@{/css/plugins.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/css/responsive.css}" rel="stylesheet">
+</head>
+
+<body>
+
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <!-- Section -->
+    <!--<section class="fullscreen" th:style="'background-image:url(' + @{/images/pages/1.jpg} + '); overflow: scroll'">-->
+    <section class="fullscreen" style="background-color: #F0F2F2; overflow: scroll">
+        <div class="container container-fullscreen">
+            <div class="text-middle">
+                <div class="text-center m-b-30">
+                    <a href="index.html" class="logo">
+                        <img th:src="@{/images/logo-toshok.png}" alt="Polo Logo">
+                    </a>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 center p-30 background-white b-r-6">
+                        <form action="#" th:action="@{/account/create}" th:object="${account}" method="post" class="form-transparent-grey">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h3>Каттоо</h3>
+                                    <!--<p>Create an account by entering the information below. If you are a returning-->
+                                        <!--customer please login at the top of the page.</p>-->
+                                </div>
+
+                                <div class="col-md-12 form-group">
+                                    <label class="sr-only">Аты жөнү</label>
+                                    <input th:field="*{fullname}" type="text" value="" placeholder="Аты жөнү" class="form-control input-lg" th:required>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label class="sr-only">Дареги</label>
+                                    <input th:field="*{address}" type="text" value="" placeholder="Дареги" class="form-control input-lg">
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label class="sr-only">Чектин Номуру</label>
+                                    <input th:field="*{checkNumber}" type="text" value="" placeholder="Чектин Номуру" class="form-control input-lg">
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label class="sr-only">Паспорт Номуру</label>
+                                    <input th:field="*{passportNumber}" type="text" value="" placeholder="Паспорт Номуру" class="form-control input-lg">
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label class="sr-only">Катталган күнү</label>
+                                    <div class="input-group date" id="datetimepicker1">
+                                        <input th:field="*{registeredDate}" type="text" class="form-control" placeholder="Катталган күнү"/>
+                                        <span class="input-group-addon"> <span class="fa fa-calendar"></span></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label class="sr-only">Регион</label>
+                                    <!--<input type="text" value="" placeholder="Регион" class="form-control input-lg">-->
+                                    <select th:field="*{regionId}">
+                                        <option value="" selected>Регион</option>
+                                        <option th:each="region : ${regions}" th:value="${region.id}" th:text="${region.name}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label class="sr-only">Ким аркылуу катталганы</label>
+                                    <select th:field="*{parentId}">
+                                        <option value="" selected>Ким аркылуу катталганы</option>
+                                        <option th:each="account : ${accounts}" th:value="${account.id}" th:text="${account.fullname}"></option>
+                                    </select>
+                                </div>
+
+                                <hr/>
+                                <div class="col-md-12 form-group">
+                                    <label class="sr-only">Колдонуучу/Тел номуру</label>
+                                    <input th:field="*{phoneNumber}" type="text" value="" placeholder="Колдонуучу/Тел номуру" class="form-control input-lg">
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label class="sr-only">Сырсөз</label>
+                                    <input id="password" th:field="*{password}" type="password" value="" placeholder="Сырсөз" class="form-control input-lg">
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label class="sr-only">Сырсөздү кайталоо</label>
+                                    <input id="confirm_password" type="password" value="" placeholder="Сырсөздү кайталоо" class="form-control input-lg">
+                                </div>
+
+                                <div class="col-md-12 form-group">
+                                    <button id="submit_button" class="btn btn-default" type="submit">Сактоо</button>
+                                    <a th:href="@{/account/register}" class="btn btn-danger m-l-10">Жокко чыгаруу</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end: Section -->
+
+
+</div>
+<!-- end: Wrapper -->
+
+<!-- Go to top button -->
+<a id="goToTop"><i class="fa fa-angle-up top-icon"></i><i class="fa fa-angle-up"></i></a><!--Plugins-->
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/plugins.js}"></script>
+
+<!--Template functions-->
+<script th:src="@{/js/functions.js}"></script>
+
+<!--Date picker-->
+<script type="text/javascript" th:src="@{/lib/moment-with-locales.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/plugins/components/bootstrap-datetimepicker.js}"></script>
+<link rel="stylesheet" th:href="@{/js/plugins/components/bootstrap-datetimepicker.min.css}" />
+
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    jQuery().ready(function(){
+        $(function() {
+            $("#datetimepicker1").datetimepicker({
+                locale: 'ru',
+                format: 'L'
+            });
+        });
+
+        $('#password, #confirm_password').on('keyup', function () {
+            if ($('#password').val() == $('#confirm_password').val()) {
+                $('#confirm_password').parent().removeClass("has-error").addClass('has-success');
+                $('#submit_button').prop('disabled', false);
+            } else{
+                $('#confirm_password').parent().removeClass("has-success").addClass('has-error');
+                $('#submit_button').prop('disabled', true);
+            }
+        });
+    });
+    /*]]>*/
+</script>
+
+
+</body>
+
+</html>
