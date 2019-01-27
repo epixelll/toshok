@@ -1,4 +1,4 @@
-package kg.enesai.toshok.services.impl
+package kg.enesai.toshok.services
 
 import kg.enesai.toshok.domains.Account
 import kg.enesai.toshok.domains.User
@@ -6,11 +6,6 @@ import kg.enesai.toshok.dtos.CreateAccountDto
 import kg.enesai.toshok.dtos.UpdateAccountDto
 import kg.enesai.toshok.enums.AccountStatus
 import kg.enesai.toshok.repositories.AccountRepository
-import kg.enesai.toshok.services.AccountService
-import kg.enesai.toshok.services.RegionService
-import kg.enesai.toshok.services.RoleService
-import kg.enesai.toshok.services.UserService
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -18,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional
 class DefaultAccountService(
         private val accountRepository: AccountRepository,
         private val regionService: RegionService,
-        private val passwordEncoder: PasswordEncoder,
-        private val roleService: RoleService,
         private val userService: UserService
 ) : AccountService {
     @Transactional(readOnly = true)
@@ -34,14 +27,14 @@ class DefaultAccountService(
 
     @Transactional
     override fun create(dto: CreateAccountDto): Account {
-        val user = userService.create(createAccountDtoToUser(dto))
-        val account = createAccountDtoToAccount(dto, user)
+        val user = userService.createMemberUser(dto.phoneNumber, dto.password)
+        val account = dtoToAccount(dto, user)
         return accountRepository.save(account)
     }
 
     @Transactional
     override fun update(id: Int, dto: UpdateAccountDto): Account {
-        val account = updateDtoToEntity(id, dto)
+        val account = dtoToAccount(id, dto)
         return accountRepository.save(account)
     }
 
@@ -50,7 +43,7 @@ class DefaultAccountService(
         accountRepository.deleteById(id)
     }
 
-    private fun createAccountDtoToAccount(dto: CreateAccountDto, user: User): Account {
+    private fun dtoToAccount(dto: CreateAccountDto, user: User): Account {
         return Account(
                 dto.checkNumber?.let { AccountStatus.CREATED } ?: AccountStatus.PENDING,
                 dto.fullname,
@@ -65,15 +58,7 @@ class DefaultAccountService(
         )
     }
 
-    private fun createAccountDtoToUser(dto: CreateAccountDto): User {
-        return User(
-                dto.phoneNumber,
-                passwordEncoder.encode(dto.password),
-                roleService.findByName("MEMBER")!!
-        )
-    }
-
-    private fun updateDtoToEntity(id: Int, dto: UpdateAccountDto): Account {
+    private fun dtoToAccount(id: Int, dto: UpdateAccountDto): Account {
         val account = get(id)
         account.fullname = dto.fullname
         account.checkNumber = dto.checkNumber

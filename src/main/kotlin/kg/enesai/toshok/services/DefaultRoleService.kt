@@ -1,4 +1,4 @@
-package kg.enesai.toshok.services.impl
+package kg.enesai.toshok.services
 
 import kg.enesai.toshok.domains.Role
 import kg.enesai.toshok.repositories.RoleRepository

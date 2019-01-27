@@ -15,5 +15,5 @@ interface RoleRepository : JpaRepository<Role, Int> {
 }
 
 interface UserRepository : JpaRepository<User, Int>{
-    fun findByUsername(username: String): User
+    fun findByUsername(username: String): User?
 }

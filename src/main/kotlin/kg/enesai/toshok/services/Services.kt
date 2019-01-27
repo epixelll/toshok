@@ -26,5 +26,5 @@ interface RoleService {
 
 interface UserService {
     fun findByUsername(username: String): User?
-    fun create(user: User): User
+    fun createMemberUser(username: String, password: String): User
 }

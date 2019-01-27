@@ -8,10 +8,13 @@ class CreateAccountDto {
     @NotBlank
     var fullname: String = ""
 
+    @NotBlank
     var address: String = ""
+
 
     var checkNumber: String? = null
 
+    @NotBlank
     var passportNumber: String? = null
 
     @DateTimeFormat(pattern = "dd.MM.yyyy")
