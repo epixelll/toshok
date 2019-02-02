@@ -2,7 +2,6 @@ package kg.enesai.toshok.services
 
 import kg.enesai.toshok.domains.User
 import kg.enesai.toshok.repositories.UserRepository
-import kg.enesai.toshok.services.UserService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

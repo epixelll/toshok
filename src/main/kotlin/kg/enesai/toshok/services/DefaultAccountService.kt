@@ -1,19 +1,17 @@
 package kg.enesai.toshok.services
 
 import kg.enesai.toshok.domains.Account
-import kg.enesai.toshok.domains.User
-import kg.enesai.toshok.dtos.RegisterForm
 import kg.enesai.toshok.dtos.UpdateAccountDto
 import kg.enesai.toshok.enums.AccountStatus
 import kg.enesai.toshok.repositories.AccountRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.lang.IllegalStateException
 
 @Service
 class DefaultAccountService(
         private val accountRepository: AccountRepository,
-        private val regionService: RegionService,
-        private val userService: UserService
+        private val regionService: RegionService
 ) : AccountService {
     @Transactional(readOnly = true)
     override fun findAll(): List<Account> {
@@ -26,9 +24,9 @@ class DefaultAccountService(
     }
 
     @Transactional
-    override fun create(dto: RegisterForm): Account {
-        val user = userService.createMemberUser(dto.phoneNumber!!, dto.password!!)
-        val account = dtoToAccount(dto, user)
+    override fun create(account: Account): Account{
+        account.parent?.id?.takeIf { accountRepository.countByParentIdAndStatus(it, AccountStatus.APPROVED) >= 4}
+                ?.let { throw IllegalStateException("Parent Account already has 4 active children") }
         return accountRepository.save(account)
     }
 
@@ -41,21 +39,6 @@ class DefaultAccountService(
     @Transactional
     override fun delete(id: Int) {
         accountRepository.deleteById(id)
-    }
-
-    private fun dtoToAccount(dto: RegisterForm, user: User): Account {
-        return Account(
-                dto.checkNumber?.let { AccountStatus.CREATED } ?: AccountStatus.PENDING,
-                dto.fullname!!,
-                dto.address!!,
-                dto.checkNumber,
-                dto.passportNumber,
-                dto.phoneNumber,
-                dto.registeredDate,
-                dto.regionId?.let { regionService.get(it) },
-                dto.parentId?.let { get(it) },
-                user
-        )
     }
 
     private fun dtoToAccount(id: Int, dto: UpdateAccountDto): Account {

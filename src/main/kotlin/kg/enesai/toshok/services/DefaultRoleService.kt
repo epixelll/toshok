@@ -2,7 +2,6 @@ package kg.enesai.toshok.services
 
 import kg.enesai.toshok.domains.Role
 import kg.enesai.toshok.repositories.RoleRepository
-import kg.enesai.toshok.services.RoleService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

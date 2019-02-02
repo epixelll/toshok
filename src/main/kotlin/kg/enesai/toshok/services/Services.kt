@@ -15,7 +15,7 @@ interface RegionService {
 interface AccountService {
     fun findAll(): List<Account>
     fun get(id: Int): Account
-    fun create(dto: RegisterForm): Account
+    fun create(account: Account): Account
     fun update(id: Int, dto: UpdateAccountDto): Account
     fun delete(id: Int)
 }
