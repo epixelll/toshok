@@ -25,7 +25,7 @@ class SecurityConfig(
         http
                 .authorizeRequests()
                     .antMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/lib/**").permitAll()
-                    .antMatchers("/", "/home", "/welcome", "/login", "/account/register", "/account/create").permitAll()
+                    .antMatchers("/", "/home", "/welcome", "/login", "/registration/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()

@@ -34,7 +34,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4 center p-30 background-white b-r-6">
-                        <form action="#" th:action="@{/account/create}" th:object="${account}" method="post" class="form-transparent-grey">
+                        <form action="#" th:action="@{/registration}" th:object="${registerForm}" method="post" class="form-transparent-grey">
                             <div class="row">
                                 <div class="col-md-12">
                                     <h3>Каттоо</h3>
@@ -45,10 +45,12 @@
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Аты жөнү</label>
                                     <input th:field="*{fullname}" type="text" value="" placeholder="Аты жөнү" class="form-control input-lg" th:required>
+                                    <span th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}" class="text-red">Fullname can't be blank</span>
                                 </div>
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Дареги</label>
                                     <input th:field="*{address}" type="text" value="" placeholder="Дареги" class="form-control input-lg">
+                                    <span th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="text-red">Address can't be blank</span>
                                 </div>
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Чектин Номуру</label>
@@ -57,6 +59,7 @@
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Паспорт Номуру</label>
                                     <input th:field="*{passportNumber}" type="text" value="" placeholder="Паспорт Номуру" class="form-control input-lg">
+                                    <span th:if="${#fields.hasErrors('passportNumber')}" th:errors="*{passportNumber}" class="text-red">Passport Number can't be blank</span>
                                 </div>
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Катталган күнү</label>
@@ -64,14 +67,15 @@
                                         <input th:field="*{registeredDate}" type="text" class="form-control" placeholder="Катталган күнү"/>
                                         <span class="input-group-addon"> <span class="fa fa-calendar"></span></span>
                                     </div>
+                                    <span th:if="${#fields.hasErrors('registeredDate')}" th:errors="*{registeredDate}" class="text-red">Registration date can't be null</span>
                                 </div>
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Регион</label>
-                                    <!--<input type="text" value="" placeholder="Регион" class="form-control input-lg">-->
                                     <select th:field="*{regionId}">
                                         <option value="" selected>Регион</option>
                                         <option th:each="region : ${regions}" th:value="${region.id}" th:text="${region.name}"></option>
                                     </select>
+                                    <span th:if="${#fields.hasErrors('regionId')}" th:errors="*{regionId}" class="text-red">Region should be selected</span>
                                 </div>
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Ким аркылуу катталганы</label>
@@ -85,6 +89,7 @@
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Колдонуучу/Тел номуру</label>
                                     <input th:field="*{phoneNumber}" type="text" value="" placeholder="Колдонуучу/Тел номуру" class="form-control input-lg">
+                                    <span th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="text-red">Phone number range (9-13)</span>
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label class="sr-only">Сырсөз</label>
@@ -94,10 +99,13 @@
                                     <label class="sr-only">Сырсөздү кайталоо</label>
                                     <input id="confirm_password" type="password" value="" placeholder="Сырсөздү кайталоо" class="form-control input-lg">
                                 </div>
+                                <div class="col-md-12 form-group">
+                                    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-red">Password can't be blank</span>
+                                </div>
 
                                 <div class="col-md-12 form-group">
                                     <button id="submit_button" class="btn btn-default" type="submit">Сактоо</button>
-                                    <a th:href="@{/account/register}" class="btn btn-danger m-l-10">Жокко чыгаруу</a>
+                                    <a th:href="@{/registration}" class="btn btn-danger m-l-10">Жокко чыгаруу</a>
                                 </div>
                             </div>
                         </form>

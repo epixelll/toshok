@@ -2,7 +2,7 @@ package kg.enesai.toshok.services
 
 import kg.enesai.toshok.domains.Account
 import kg.enesai.toshok.domains.User
-import kg.enesai.toshok.dtos.CreateAccountDto
+import kg.enesai.toshok.dtos.RegisterForm
 import kg.enesai.toshok.dtos.UpdateAccountDto
 import kg.enesai.toshok.enums.AccountStatus
 import kg.enesai.toshok.repositories.AccountRepository
@@ -26,8 +26,8 @@ class DefaultAccountService(
     }
 
     @Transactional
-    override fun create(dto: CreateAccountDto): Account {
-        val user = userService.createMemberUser(dto.phoneNumber, dto.password)
+    override fun create(dto: RegisterForm): Account {
+        val user = userService.createMemberUser(dto.phoneNumber!!, dto.password!!)
         val account = dtoToAccount(dto, user)
         return accountRepository.save(account)
     }
@@ -43,11 +43,11 @@ class DefaultAccountService(
         accountRepository.deleteById(id)
     }
 
-    private fun dtoToAccount(dto: CreateAccountDto, user: User): Account {
+    private fun dtoToAccount(dto: RegisterForm, user: User): Account {
         return Account(
                 dto.checkNumber?.let { AccountStatus.CREATED } ?: AccountStatus.PENDING,
-                dto.fullname,
-                dto.address,
+                dto.fullname!!,
+                dto.address!!,
                 dto.checkNumber,
                 dto.passportNumber,
                 dto.phoneNumber,

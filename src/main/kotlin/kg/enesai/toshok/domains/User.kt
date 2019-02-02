@@ -5,14 +5,14 @@ import javax.persistence.*
 @Entity
 @Table(name = "users")
 class User(
-        @Column(name = "username", unique = true)
+        @Column(name = "username", unique = true, nullable = false, updatable = false)
         val username: String,
 
-        @Column(name = "password")
+        @Column(name = "password", nullable = false)
         var password: String,
 
         @ManyToOne
-        @JoinColumn(name = "role_id")
+        @JoinColumn(name = "role_id", nullable = false)
         val role: Role
 ) {
     @Id

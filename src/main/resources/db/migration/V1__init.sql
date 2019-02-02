@@ -31,5 +31,5 @@ create table accounts(
   registered_date DATE,
   region_id BIGINT REFERENCES regions,
   parent_id BIGINT REFERENCES accounts,
-  user_id BIGINT REFERENCES users
+  user_id BIGINT REFERENCES users NOT NULL
 );

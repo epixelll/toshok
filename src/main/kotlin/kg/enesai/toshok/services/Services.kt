@@ -4,7 +4,7 @@ import kg.enesai.toshok.domains.Account
 import kg.enesai.toshok.domains.Region
 import kg.enesai.toshok.domains.Role
 import kg.enesai.toshok.domains.User
-import kg.enesai.toshok.dtos.CreateAccountDto
+import kg.enesai.toshok.dtos.RegisterForm
 import kg.enesai.toshok.dtos.UpdateAccountDto
 
 interface RegionService {
@@ -15,7 +15,7 @@ interface RegionService {
 interface AccountService {
     fun findAll(): List<Account>
     fun get(id: Int): Account
-    fun create(dto: CreateAccountDto): Account
+    fun create(dto: RegisterForm): Account
     fun update(id: Int, dto: UpdateAccountDto): Account
     fun delete(id: Int)
 }

@@ -8,14 +8,14 @@ import javax.persistence.*
 @Table(name = "accounts")
 class Account(
         @Enumerated(EnumType.STRING)
-        @Column(name = "status")
+        @Column(name = "status", nullable = false)
         var status: AccountStatus,
 
-        @Column(name = "fullname")
+        @Column(name = "fullname", nullable = false)
         var fullname: String,
 
         @Column(name = "address")
-        var address: String,
+        var address: String?,
 
         @Column(name = "check_number", unique = true)
         var checkNumber: String?,
