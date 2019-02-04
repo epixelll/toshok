@@ -1,19 +1,26 @@
 package kg.enesai.toshok.dtos
 
 import kg.enesai.toshok.domains.Account
+import kg.enesai.toshok.enums.AccountStatus
 
 data class AccountDto(
+        val id: Int,
+        val status: AccountStatus,
         val fullname: String,
         val checkNumber: String?,
-        val regionId: Int?,
-        val parentId: Int?
+        val level: Int,
+        val parentName: String?,
+        val phoneNumber: String?
 ) {
     companion object {
-        fun of(account: Account) = AccountDto(
+        fun of(account: Account, level: Int) = AccountDto(
+                account.id!!,
+                account.status,
                 account.fullname,
                 account.checkNumber,
-                account.region?.id,
-                account.parent?.id
+                level,
+                account.parent?.fullname,
+                account.phoneNumber
         )
     }
 }

@@ -1,6 +1,7 @@
 package kg.enesai.toshok.controllers
 
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 
 @Controller
@@ -12,8 +13,12 @@ class CommonController {
     }
 
     @GetMapping("/welcome")
-    fun welcome(model: MutableMap<String, Any>): String {
-        model["message"] = "this message"
+    fun welcome(model: Model): String {
         return "welcome"
+    }
+
+    @GetMapping("/dashboard")
+    fun dashboard(model: Model): String {
+        return "dashboard"
     }
 }

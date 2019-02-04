@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="description" content="Kyrgyz Oimoloru"> <!-- Document title --> <title>Kyrgyz Oimoloru</title> <!-- Stylesheets & Fonts -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,800,700,600|Montserrat:400,500,600,700|Raleway:100,300,600,700,800"
+
+    <link th:href="@{/css/plugins.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/css/responsive.css}" rel="stylesheet">
+</head>
+
+<body>
+
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+
+    <div th:replace="fragments/header :: topbar"></div>
+    <div th:replace="fragments/header :: header"></div>
+
+    <!-- Section -->
+    <!--<section class="fullscreen" th:style="'background-image:url(' + @{/images/pages/1.jpg} + '); overflow: scroll'">-->
+    <section class="fullscreen" style="background-color: #F0F2F2">
+        <div class="container container-fullscreen">
+            <div class="text-middle">
+                <!--<div class="text-center m-b-30">-->
+                    <!--<a href="index.html" class="logo">-->
+                        <!--<img th:src="@{/images/logo-toshok.png}" alt="Polo Logo">-->
+                    <!--</a>-->
+                <!--</div>-->
+                <div class="row">
+                    <div class="col-md-4 center p-30 background-white b-r-6">
+                        <form action="#" th:action="@{/account}" th:object="${accountCreateForm}" method="post" class="form-transparent-grey">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h3>Каттоо</h3>
+                                    <!--<p>Create an account by entering the information below. If you are a returning-->
+                                        <!--customer please login at the top of the page.</p>-->
+                                </div>
+
+                                <div class="col-md-12 form-group">
+                                    <label class="sr-only">Аты жөнү</label>
+                                    <input th:field="*{fullname}" type="text" value="" placeholder="Аты жөнү" class="form-control input-lg" th:required>
+                                    <span th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}" class="text-red">Fullname can't be blank</span>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label class="sr-only">Дареги</label>
+                                    <input th:field="*{address}" type="text" value="" placeholder="Дареги" class="form-control input-lg">
+                                    <span th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="text-red">Address can't be blank</span>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label class="sr-only">Чектин Номуру</label>
+                                    <input th:field="*{checkNumber}" type="text" value="" placeholder="Чектин Номуру" class="form-control input-lg">
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label class="sr-only">Паспорт Номуру</label>
+                                    <input th:field="*{passportNumber}" type="text" value="" placeholder="Паспорт Номуру" class="form-control input-lg">
+                                    <span th:if="${#fields.hasErrors('passportNumber')}" th:errors="*{passportNumber}" class="text-red">Passport Number can't be blank</span>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label class="sr-only">Катталган күнү</label>
+                                    <div class="input-group date" id="datetimepicker1">
+                                        <input th:field="*{registeredDate}" type="text" class="form-control" placeholder="Катталган күнү"/>
+                                        <span class="input-group-addon"> <span class="fa fa-calendar"></span></span>
+                                    </div>
+                                    <span th:if="${#fields.hasErrors('registeredDate')}" th:errors="*{registeredDate}" class="text-red">Registration date can't be null</span>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label class="sr-only">Регион</label>
+                                    <select th:field="*{regionId}">
+                                        <option value="" selected>Регион</option>
+                                        <option th:each="region : ${regions}" th:value="${region.id}" th:text="${region.name}"></option>
+                                    </select>
+                                    <span th:if="${#fields.hasErrors('regionId')}" th:errors="*{regionId}" class="text-red">Region should be selected</span>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label class="sr-only">Ким аркылуу катталганы</label>
+                                    <select th:field="*{parentId}">
+                                        <option value="" selected>Ким аркылуу катталганы</option>
+                                        <option th:each="account : ${accounts}" th:value="${account.id}" th:text="${account.fullname}"></option>
+                                    </select>
+                                </div>
+
+                                <hr/>
+                                <div class="col-md-12 form-group">
+                                    <label class="sr-only">Колдонуучу/Тел номуру</label>
+                                    <input th:field="*{phoneNumber}" type="text" value="" placeholder="Колдонуучу/Тел номуру" class="form-control input-lg">
+                                    <span th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="text-red">Phone number range (9-13)</span>
+                                </div>
+
+                                <div class="col-md-12 form-group">
+                                    <button id="submit_button" class="btn btn-default" type="submit">Сактоо</button>
+                                    <a th:href="@{/registration}" class="btn btn-danger m-l-10">Жокко чыгаруу</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end: Section -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+</div>
+<!-- end: Wrapper -->
+
+<!-- Go to top button -->
+<a id="goToTop"><i class="fa fa-angle-up top-icon"></i><i class="fa fa-angle-up"></i></a><!--Plugins-->
+<!--Plugins-->
+<div th:replace="fragments/footer :: scripts"></div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    jQuery().ready(function(){
+        $(function() {
+            $("#datetimepicker1").datetimepicker({
+                locale: 'ru',
+                format: 'L',
+                defaultDate: new Date()
+            });
+        });
+
+        $('#password, #confirm_password').on('keyup', function () {
+            if ($('#password').val() == $('#confirm_password').val()) {
+                $('#confirm_password').parent().removeClass("has-error").addClass('has-success');
+                $('#submit_button').prop('disabled', false);
+            } else{
+                $('#confirm_password').parent().removeClass("has-success").addClass('has-error');
+                $('#submit_button').prop('disabled', true);
+            }
+        });
+    });
+    /*]]>*/
+</script>
+
+
+</body>
+
+</html>

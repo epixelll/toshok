@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head th:include="fragments/header :: headerFragment">
+</head>
+
+<!--<body data-animation-in="fadeIn"  data-animation-out="fadeOut" data-icon="12" data-icon-color="#76aa00" data-speed-in="1000" data-speed-out="500">-->
+<body>
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <div th:replace="fragments/header :: topbar"></div>
+    <div th:replace="fragments/header :: header"></div>
+
+    <!-- Section -->
+    <section>
+        <div class="container">
+
+            <!--Panels default-->
+            <div class="hr-title hr-long center"><abbr>Panels default</abbr>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Panel heading without title</div>
+                        <div class="panel-body">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis, sem quis lacinia
+                            faucibus, orci ipsum gravida tortor, vel interdum mi sapien ut justo. Nulla varius consequat
+                            magna, id molestie ipsum volutpat quis. Suspendisse consectetur fringilla luctus. Fusce id
+                            mi diam, non ornare orci. Pellentesque ipsum erat, facilisis ut venenatis eu, sodales vel
+                            dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis, sem quis
+                            lacinia faucibus, orci ipsum gravida tortor, vel interdum mi sapien ut justo. Nulla varius
+                            consequat magna, id molestie ipsum volutpat quis. Suspendisse consectetur fringilla luctus.
+                            Fusce id mi diam, non ornare orci. Pellentesque ipsum erat, facilisis ut venenatis eu,
+                            sodales vel dolor.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--END: Panels default-->
+            <hr class="space">
+
+            <!--Panel Contextual alternatives-->
+            <div class="hr-title hr-long center"><abbr>Panel Contextual alternatives</abbr>
+            </div>
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Panel heading without title</div>
+                        <div class="panel-body">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis, sem quis lacinia
+                            faucibus, orci ipsum gravida tortor, vel interdum mi sapien ut justo. Nulla varius consequat
+                            magna, id molestie ipsum volutpat quis. Suspendisse consectetur fringilla luctus. Fusce id
+                            mi diam, non ornare orci. Pellentesque ipsum erat, facilisis ut venenatis eu, sodales vel
+                            dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis, sem quis
+                            lacinia faucibus, orci ipsum gravida tortor, vel interdum mi sapien ut justo. Nulla varius
+                            consequat magna, id molestie ipsum volutpat quis. Suspendisse consectetur fringilla luctus.
+                            Fusce id mi diam, non ornare orci. Pellentesque ipsum erat, facilisis ut venenatis eu,
+                            sodales vel dolor.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Panel title</h3>
+                        </div>
+                        <div class="panel-body">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis, sem quis lacinia
+                            faucibus, orci ipsum gravida tortor, vel interdum mi sapien ut justo. Nulla varius consequat
+                            magna, id molestie ipsum volutpat quis. Suspendisse consectetur fringilla luctus. Fusce id
+                            mi diam, non ornare orci. Pellentesque ipsum erat, facilisis ut venenatis eu, sodales vel
+                            dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis, sem quis
+                            lacinia faucibus, orci ipsum gravida tortor, vel interdum mi sapien ut justo. Nulla varius
+                            consequat magna, id molestie ipsum volutpat quis. Suspendisse consectetur fringilla luctus.
+                            Fusce id mi diam, non ornare orci. Pellentesque ipsum erat, facilisis ut venenatis eu,
+                            sodales vel dolor.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!--END: Panel Contextual alternatives-->
+            <hr class="space">
+
+
+            <!--Panel with tables-->
+            <div class="hr-title hr-long center"><abbr>Panel with tables</abbr>
+            </div>
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Panel heading without title</div>
+                        <div class="panel-body">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis, sem quis lacinia
+                            faucibus, orci ipsum gravida tortor, vel interdum mi sapien ut justo. Nulla varius consequat
+                            magna, id molestie ipsum volutpat quis. Suspendisse consectetur fringilla luctus. Fusce id
+                            mi diam, non ornare orci. Pellentesque ipsum erat, facilisis ut venenatis eu, sodales vel
+                            dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis, sem quis
+                            lacinia faucibus, orci ipsum gravida tortor, vel interdum mi sapien ut justo. Nulla varius
+                            consequat magna, id molestie ipsum volutpat quis. Suspendisse consectetur fringilla luctus.
+                            Fusce id mi diam, non ornare orci. Pellentesque ipsum erat, facilisis ut venenatis eu,
+                            sodales vel dolor.
+                        </div>
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Row</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>John</td>
+                                <td>Carter</td>
+                                <td>johncarter@mail.com</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Peter</td>
+                                <td>Parker</td>
+                                <td>peterparker@mail.com</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>John</td>
+                                <td>Rambo</td>
+                                <td>johnrambo@mail.com</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Juna</td>
+                                <td>Doe</td>
+                                <td>johnrambo@mail.com</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Alea</td>
+                                <td>Smith</td>
+                                <td>johnrambo@mail.com</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>Resa</td>
+                                <td>Parker</td>
+                                <td>johnrambo@mail.com</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Panel title</h3>
+                        </div>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Row</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>John</td>
+                                <td>Carter</td>
+                                <td>johncarter@mail.com</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Peter</td>
+                                <td>Parker</td>
+                                <td>peterparker@mail.com</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>John</td>
+                                <td>Rambo</td>
+                                <td>johnrambo@mail.com</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Juna</td>
+                                <td>Doe</td>
+                                <td>johnrambo@mail.com</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Alea</td>
+                                <td>Smith</td>
+                                <td>johnrambo@mail.com</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>Resa</td>
+                                <td>Parker</td>
+                                <td>johnrambo@mail.com</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>John</td>
+                                <td>Carter</td>
+                                <td>johncarter@mail.com</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Peter</td>
+                                <td>Parker</td>
+                                <td>peterparker@mail.com</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>John</td>
+                                <td>Rambo</td>
+                                <td>johnrambo@mail.com</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Juna</td>
+                                <td>Doe</td>
+                                <td>johnrambo@mail.com</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Alea</td>
+                                <td>Smith</td>
+                                <td>johnrambo@mail.com</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>Resa</td>
+                                <td>Parker</td>
+                                <td>johnrambo@mail.com</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+            <!--END: Panel with tables-->
+            <hr class="space">
+
+
+        </div>
+    </section>
+    <!-- end: Section -->
+
+    <div th:replace="fragments/footer :: footer"></div>
+
+</div>    <!-- end: Wrapper -->
+
+<!-- Go to top button -->
+<a id="goToTop"><i class="fa fa-angle-up top-icon"></i><i class="fa fa-angle-up"></i></a>
+
+<!--Plugins-->
+<div th:replace="fragments/footer :: scripts"></div>
+
+</body>
+</html>

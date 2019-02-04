@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="footer">
+    <footer id="footer" class="footer-light">
+        <div class="copyright-content">
+            <div class="container">
+                <div class="copyright-text text-center">&copy; 2019 NSI - Enesai Technologies Team. All
+                    Rights Reserved
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<div th:fragment="scripts">
+    <script th:src="@{/js/jquery.js}"></script>
+    <script th:src="@{/js/plugins.js}"></script>
+
+    <!--Template functions-->
+    <script th:src="@{/js/functions.js}"></script>
+
+
+    <!--Date picker-->
+    <script type="text/javascript" th:src="@{/lib/moment-with-locales.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/components/bootstrap-datetimepicker.js}"></script>
+    <link rel="stylesheet" th:href="@{/js/plugins/components/bootstrap-datetimepicker.min.css}" />
+</div>
+
+</body>
+
+</html>

@@ -9,6 +9,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.web.multipart.support.MultipartFilter
+import javax.servlet.ServletContext
+
+
 
 
 @EnableWebSecurity
@@ -23,14 +27,15 @@ class SecurityConfig(
 
     override fun configure(http: HttpSecurity) {
         http
+                .csrf().disable()
                 .authorizeRequests()
                     .antMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/lib/**").permitAll()
-                    .antMatchers("/", "/home", "/welcome", "/login", "/registration/**").permitAll()
+                    .antMatchers("/", "/home", "/welcome", "/login", "/registration/**", "/registration/upload-csv").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
                     .loginPage("/login")
-                    .defaultSuccessUrl("/success.html", true)
+                    .defaultSuccessUrl("/dashboard", true)
                     .permitAll()
                 .and()
                     .logout()

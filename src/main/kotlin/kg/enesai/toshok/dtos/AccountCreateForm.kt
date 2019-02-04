@@ -1,10 +1,12 @@
 package kg.enesai.toshok.dtos
 
+import org.springframework.format.annotation.DateTimeFormat
+import java.time.LocalDate
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
-data class RegisterForm(
+data class AccountCreateForm(
         @field:NotBlank
         var fullname: String?,
 
@@ -16,6 +18,9 @@ data class RegisterForm(
         @field:NotBlank
         var passportNumber: String?,
 
+        @field:DateTimeFormat(pattern = "dd.MM.yyyy")
+        var registeredDate: LocalDate?,
+
         @field:NotNull
         var regionId: Int?,
 
@@ -23,8 +28,5 @@ data class RegisterForm(
 
         @field:NotBlank
         @field:Size(min = 9, max = 13)
-        var phoneNumber: String?,
-
-        @field:NotBlank
-        var password: String?
+        var phoneNumber: String?
 )

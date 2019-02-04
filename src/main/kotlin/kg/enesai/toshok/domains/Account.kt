@@ -17,7 +17,7 @@ class Account(
         @Column(name = "address")
         var address: String?,
 
-        @Column(name = "check_number", unique = true)
+        @Column(name = "check_number")
         var checkNumber: String?,
 
         @Column(name = "passport_number")
@@ -39,7 +39,7 @@ class Account(
 
         @ManyToOne
         @JoinColumn(name = "user_id")
-        val user: User
+        var user: User?
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

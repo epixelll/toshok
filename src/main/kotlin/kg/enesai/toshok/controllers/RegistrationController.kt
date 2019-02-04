@@ -7,10 +7,8 @@ import kg.enesai.toshok.services.endpoint.RegistrationEndpointService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.ModelAttribute
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import javax.validation.Valid
 
 @Controller
@@ -20,14 +18,14 @@ class RegistrationController(
         private val accountService: AccountService,
         private val regionService: RegionService
 ) {
-    @GetMapping()
+    @GetMapping
     fun getRegister(@ModelAttribute("registerForm") registerForm: RegisterForm, model: Model): String {
         model.addAttribute("regions", regionService.findAll())
         model.addAttribute("accounts", accountService.findAll())
         return "register"
     }
 
-    @PostMapping()
+    @PostMapping
     fun create(@Valid @ModelAttribute("registerForm") registerForm: RegisterForm, bindingResult: BindingResult, model: Model): String {
         if(bindingResult.hasErrors()){
             model.addAttribute("regions", regionService.findAll())
@@ -35,7 +33,12 @@ class RegistrationController(
             return "register"
         }
         registrationEndpoint.register(registerForm)
-        return "welcome"
+        return "redirect:/login"
     }
 
+    @PostMapping("/upload-csv")
+    @ResponseBody
+    fun import(@RequestParam("file") file: MultipartFile){
+        registrationEndpoint.import(file)
+    }
 }

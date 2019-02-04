@@ -1,11 +1,91 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <body>
+<head th:fragment="headerFragment">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="description" content="Kyrgyz Oimoloru"> <!-- Document title --> <title>Kyrgyz Oimoloru</title> <!-- Stylesheets & Fonts -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,800,700,600|Montserrat:400,500,600,700|Raleway:100,300,600,700,800"
 
-<div th:fragment="copy">
-    &copy; 2011 The Good Thymes Virtual Grocery
+    <link th:href="@{/css/plugins.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/css/responsive.css}" rel="stylesheet">
+</head>
+<div th:fragment="topbar">
+    <div id="topbar" class=" topbar-fullwidth dark visible-md visible-lg">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <ul class="top-menu">
+                        <li><a href="#">Телефон: 0773069858, 0773919101,0502700111</a></li>
+                        <li><a href="#">Электрондук дареги: kyrgyz.oimoloru@gmail.com</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-6 hidden-xs">
+                    <div class="social-icons social-icons-colored-hover">
+                        <ul>
+                            <li class="social-facebook"><a href="#"><i class="fa fa-facebook"></i></a></li>
+                            <li class="social-twitter"><a href="#"><i class="fa fa-twitter"></i></a></li>
+                            <li class="social-google"><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                            <li class="social-pinterest"><a href="#"><i class="fa fa-pinterest"></i></a></li>
+                            <li class="social-vimeo"><a href="#"><i class="fa fa-vimeo-square"></i></a></li>
+                            <li class="social-linkedin"><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                            <li class="social-dribbble"><a href="#"><i class="fa fa-dribbble"></i></a></li>
+                            <li class="social-youtube"><a href="#"><i class="fa fa-youtube-play"></i></a></li>
+                            <li class="social-rss"><a href="#"><i class="fa fa-rss"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:fragment="header">
+    <header id="header" class=" header-fullwidth header-light ">
+        <div id="header-wrap">
+            <div class="container"> <!--Logo-->
+                <div id="logo">
+                    <a th:href="@{/}" class="logo" th:data-dark-logo="@{../images/logo.png}">
+                        <img th:src="@{../images/logo.png}" alt="Polo Logo">
+                    </a>
+                </div>
+                <!--End: Logo-->
+
+                <!--Navigation Resposnive Trigger-->
+                <div id="mainMenu-trigger">
+                    <button class="lines-button x"><span class="lines"></span></button>
+                </div>
+                <!--end: Navigation Resposnive Trigger-->
+
+                <!--Navigation-->
+                <div id="mainMenu" class="light">
+                    <div class="container">
+                        <nav>
+                            <ul>
+                                <li><a th:href="@{/dashboard}">Башкы бет</a></li>
+                                <li class="dropdown"><a href="#">Отчеттер</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a th:href="@{/list}"><i class="fa fa-th"></i>Жалпы тизме</a></li>
+                                        <li><a th:href="@{/last-month}"><i class="fa fa-window-minimize"></i>Акыркы Айда</a></li>
+
+                                    </ul>
+                                </li>
+                                <li><a href="http://kyrgyzoimoloru.kg">Вебсайт</a></li>
+                                <li sec:authorize="hasAuthority('USER_MANAGEMENT')"><a th:href="@{/admin/users}">Колдонуучулар</a></li>
+                                <li><a th:href="@{/account/approve-list}">Тастыкталуу үчун</a></li>
+                                <li><a th:href="@{/account/list}">Катталгандар</a></li>
+                                <li><a th:href="@{/user/profile}">Провиль</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <!--END: NAVIGATION-->
+            </div>
+        </div>
+    </header>
 </div>
 
 </body>

@@ -25,11 +25,11 @@ create table accounts(
   status VARCHAR(100) NOT NULL,
   fullname VARCHAR(150) NOT NULL,
   address VARCHAR(150),
-  check_number VARCHAR UNIQUE,
+  check_number VARCHAR,
   passport_number VARCHAR(150),
   phone_number VARCHAR(30),
   registered_date DATE,
   region_id BIGINT REFERENCES regions,
   parent_id BIGINT REFERENCES accounts,
-  user_id BIGINT REFERENCES users NOT NULL
+  user_id BIGINT REFERENCES users
 );

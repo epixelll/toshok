@@ -186,7 +186,7 @@ label   {
 
 
 .logo  {   
-    background-image:url(../images/logo.png);
+    background-image:url(' + @{/images/pages/1.jpg} + ');
     display:block;
     width:211px;  height: 38px;margin-top:10px;
 	margin-left: 30px;
