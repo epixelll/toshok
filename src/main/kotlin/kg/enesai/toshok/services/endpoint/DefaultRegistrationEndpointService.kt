@@ -31,7 +31,6 @@ class DefaultRegistrationEndpointService(
 
     var formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
-    @Transactional
     override fun import(file: InputStreamSource) {
         readCsv(file.inputStream).forEach{ accountCell ->
             val account = cellToAccount(accountCell)
