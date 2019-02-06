@@ -112,6 +112,8 @@ class DefaultAccountService(
         return level
     }
 
+    override fun findById(id: Int) = accountRepository.findById(id).orElseThrow { EntityNotFoundException("Account with id = $id not found") }!!
+
     private fun formToAccount(form: AccountUpdateForm): Account {
         val account = get(form.id)
         account.status = form.checkNumber?.let { AccountStatus.PENDING } ?: AccountStatus.CREATED
@@ -136,8 +138,7 @@ class DefaultAccountService(
                 createForm.phoneNumber,
                 createForm.registeredDate,
                 createForm.regionId?.let { regionService.get(it) },
-                createForm.parentId?.let { this.get(it) },
-                null
+                createForm.parentId?.let { this.get(it) }
         )
     }
 }

@@ -1,7 +1,7 @@
 insert into roles(name)
-values ('MEMBER'),
+values ('ADMIN'),
 ('OPERATOR'),
-('ADMIN');
+('MEMBER');
 
 insert into regions(name)
 values ('Бишкек шаары'),

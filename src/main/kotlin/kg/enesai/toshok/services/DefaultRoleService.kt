@@ -4,6 +4,7 @@ import kg.enesai.toshok.domains.Role
 import kg.enesai.toshok.repositories.RoleRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import javax.persistence.EntityNotFoundException
 
 @Service
 class DefaultRoleService(
@@ -14,4 +15,6 @@ class DefaultRoleService(
         return roleRepository.findByName(name)
     }
 
+    @Transactional(readOnly = true)
+    override fun findById(id: Int) = roleRepository.findById(id).orElseThrow { EntityNotFoundException("Role with id = $id not found") }
 }

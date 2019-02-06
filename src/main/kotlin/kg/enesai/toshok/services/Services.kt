@@ -29,13 +29,20 @@ interface AccountService {
     fun createAndFlush(it: Account): Account
     fun findAllPending(pageable: Pageable): Page<AccountDto>
     fun approve(id: Int)
+    fun findById(id: Int): Account
 }
 
 interface RoleService {
     fun findByName(name: String): Role?
+    fun findById(id: Int): Role
 }
 
 interface UserService {
     fun findByUsername(username: String): User?
-    fun createMemberUser(username: String, password: String): User
+    fun createMemberUser(username: String, password: String, account: Account): User
+    fun findAll(pageable: Pageable): Page<User>
+    fun getUpdateForm(id: Int): UserUpdateForm
+    fun create(userCreateForm: UserCreateForm)
+    fun update(userUpdateForm: UserUpdateForm)
+    fun delete(id: Int)
 }

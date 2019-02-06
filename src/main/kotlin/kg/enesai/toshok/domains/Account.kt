@@ -35,11 +35,7 @@ class Account(
 
         @ManyToOne
         @JoinColumn(name = "parent_id")
-        var parent: Account?,
-
-        @ManyToOne
-        @JoinColumn(name = "user_id")
-        var user: User?
+        var parent: Account?
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

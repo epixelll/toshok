@@ -8,13 +8,6 @@ create table roles_permissions(
   permission VARCHAR NOT NULL
 );
 
-create table users(
-  id SERIAL PRIMARY KEY,
-  username VARCHAR(30) NOT NULL UNIQUE,
-  password VARCHAR(150) NOT NULL,
-  role_id BIGINT NOT NULL REFERENCES roles
-);
-
 create table regions(
   id SERIAL PRIMARY KEY,
   name VARCHAR NOT NULL
@@ -30,6 +23,13 @@ create table accounts(
   phone_number VARCHAR(30),
   registered_date DATE,
   region_id BIGINT REFERENCES regions,
-  parent_id BIGINT REFERENCES accounts,
-  user_id BIGINT REFERENCES users
+  parent_id BIGINT REFERENCES accounts
+);
+
+create table users(
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(30) NOT NULL UNIQUE,
+  password VARCHAR(150) NOT NULL,
+  role_id BIGINT NOT NULL REFERENCES roles,
+  account_id BIGINT REFERENCES accounts
 );

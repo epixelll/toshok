@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head th:include="fragments/header :: headerFragment">
+</head>
+
+<!--<body data-animation-in="fadeIn"  data-animation-out="fadeOut" data-icon="12" data-icon-color="#76aa00" data-speed-in="1000" data-speed-out="500">-->
+<body>
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <div th:replace="fragments/header :: topbar"></div>
+    <div th:replace="fragments/header :: header"></div>
+
+    <!-- Section -->
+    <section class="p-t-20">
+        <div class="container">
+
+            <div class="row">
+                <a th:href="@{/user/getUserCreateForm}" class="btn btn-rounded float-right">Жаны</a>
+            </div>
+
+            <!--Panel with tables-->
+            <!--<div class="hr-title hr-long center"><abbr>Катталгандар</abbr>-->
+            <!--</div>-->
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Тизмеси</h3>
+                        </div>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>N:</th>
+                                <th>Колдонуучу аты</th>
+                                <th>Ролу</th>
+                                <th>Кимге байланган</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="user, iter : ${users.content}">
+                                <td th:text="${iter.index + 1}">Number</td>
+                                <td th:text="${user.username}">Username</td>
+                                <td th:if="${user.roleName == 'ADMIN'}">Администратор</td>
+                                <td th:if="${user.roleName == 'OPERATOR'}">Оператор</td>
+                                <td th:if="${user.roleName == 'MEMBER'}">Жөнөкөй колдонуучу</td>
+                                <td th:text="${user.accountName}">Account Name</td>
+                                <td>
+                                    <a type="button" class="btn btn-light" th:href="@{'/user/getUserUpdateForm/' + ${user.id}}">
+                                        <i class="fa fa-cog"></i>
+                                    </a>
+                                    <a type="button" class="btn btn-red" th:href="@{'/user/delete/' + ${user.id}}">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <nav class="text-center m-t-5">
+                        <ul class="pagination">
+                            <li th:class="${users.number eq 0} ? 'disabled' : ''">
+                                <a th:if="${not users.first}" th:href="@{${'/user/list'}(page=${users.number-1},size=${users.size})}" aria-label="Previous"> <span aria-hidden="true"><i class="fa fa-angle-left"></i></span> </a>
+                                <a th:if="${users.first}" href="javascript:void(0);" aria-label="Previous"> <span aria-hidden="true"><i class="fa fa-angle-left"></i></span> </a>
+                            </li>
+                            <li th:each="pageNo : ${#numbers.sequence(0, users.totalPages - 1)}" th:class="${users.number eq pageNo}? 'active' : ''">
+                                <a th:if="${users.number  eq pageNo}" href="javascript:void(0);">
+                                    <span th:text="${pageNo + 1}"></span>
+                                </a>
+                                <a th:if="${not (users.number  eq pageNo)}" th:href="@{${'/user/list'}(page=${pageNo},size=${users.size})}">
+                                    <span th:text="${pageNo + 1}"></span>
+                                </a>
+
+                            </li>
+                            <li th:class="${users.number + 1 ge users.totalPages} ? 'disabled' : ''">
+                                <a th:if="${not users.last}" th:href="@{${'/user/list'}(page=${users.number+1},size=${users.size})}" aria-label="Next"> <span aria-hidden="true"><i class="fa fa-angle-right"></i></span> </a>
+                                <a th:if="${users.last}" href="javascript:void(0);" aria-label="Next"> <span aria-hidden="true"><i class="fa fa-angle-right"></i></span> </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+
+            </div>
+            <!--END: Panel with tables-->
+            <hr class="space">
+
+
+        </div>
+    </section>
+    <!-- end: Section -->
+
+    <div th:replace="fragments/footer :: footer"></div>
+
+</div>    <!-- end: Wrapper -->
+
+<!-- Go to top button -->
+<a id="goToTop"><i class="fa fa-angle-up top-icon"></i><i class="fa fa-angle-up"></i></a>
+
+<!--Plugins-->
+<div th:replace="fragments/footer :: scripts"></div>
+
+</body>
+</html>

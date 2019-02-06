@@ -52,16 +52,15 @@ class DefaultRegistrationEndpointService(
                 cell.phoneNumber?.takeIf{ it.isNotBlank() }?.let { it.trim() },
                 date,
                 regionService.findByName(cell.address),
-                accountservice.findByFullname(cell.parentName),
-                null
+                accountservice.findByFullname(cell.parentName)
         )
     }
 
     @Transactional
     override fun register(form: RegisterForm): AccountDto {
-        val user = userService.createMemberUser(form.phoneNumber!!, form.password!!)
-        var account = formToAccount(form, user)
+        var account = formToAccount(form)
         account = accountservice.create(account)
+        userService.createMemberUser(form.phoneNumber!!, form.password!!, account)
         return AccountDto.of(account, accountservice.getLevel(account))
     }
 
@@ -77,7 +76,7 @@ class DefaultRegistrationEndpointService(
         return csvToBean.parse(ms, reader)
     }
 
-    private fun formToAccount(dto: RegisterForm, user: User): Account {
+    private fun formToAccount(dto: RegisterForm): Account {
         return Account(
                 dto.checkNumber?.let { AccountStatus.CREATED } ?: AccountStatus.PENDING,
                 dto.fullname!!,
@@ -87,8 +86,7 @@ class DefaultRegistrationEndpointService(
                 dto.phoneNumber,
                 LocalDate.now(),
                 dto.regionId?.let { regionService.get(it) },
-                dto.parentId?.let { accountservice.get(it) },
-                user
+                dto.parentId?.let { accountservice.get(it) }
         )
     }
 }
