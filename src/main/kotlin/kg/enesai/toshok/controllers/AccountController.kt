@@ -9,7 +9,6 @@ import kg.enesai.toshok.services.UserService
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.User
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
@@ -29,12 +28,19 @@ class AccountController(
         return "account/accountList"
     }
 
+    @GetMapping("/gift-needed")
+    fun getGiftNeeded(pageable: Pageable, model: Model): String {
+        model.addAttribute("accounts", accountService.findAllGiftNeededAccounts(pageable))
+        return "account/giftNeededAccountList"
+    }
+
     @GetMapping("/info/{id}")
     fun getAccountInfo(authentication: Authentication, @PathVariable id: Int, model: Model): String {
-        val user = authentication.principal as User
-        val userId = userService.findByUsername(user.username)?.id
-        if(!authentication.authorities.map { it.authority }.contains(Permission.ACCOUNT_VIEW.toString()) && id != userId ){
-            return """redirect:/account/info/$userId"""
+        val principal = authentication.principal as User
+        val user = userService.findByUsername(principal.username)!!
+        if(!authentication.authorities.map { it.authority }.contains(Permission.ACCOUNT_VIEW.toString()) && id != user.account?.id ){
+            if(user.account == null) return """redirect:/user/profile"""
+            return """redirect:/account/info/${user.account?.id}"""
         }
         model.addAttribute("account", accountService.getAccountInfo(id))
         return "account/accountInfo"
@@ -93,5 +99,11 @@ class AccountController(
     fun approve(@PathVariable id: Int): String {
         accountService.approve(id)
         return "redirect:/account/approve-list"
+    }
+
+    @GetMapping("/give-gift/{id}")
+    fun giveGift(@PathVariable id: Int): String {
+        accountService.giveGift(id)
+        return "redirect:/account/gift-needed"
     }
 }

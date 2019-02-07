@@ -9,16 +9,18 @@ data class AccountDto(
         val fullname: String,
         val checkNumber: String?,
         val level: Int,
+        val giftsGiven: Int,
         val parentName: String?,
         val phoneNumber: String?
 ) {
     companion object {
-        fun of(account: Account, level: Int) = AccountDto(
+        fun of(account: Account) = AccountDto(
                 account.id!!,
                 account.status,
                 account.fullname,
                 account.checkNumber,
-                level,
+                account.level,
+                account.giftGivenForLevel,
                 account.parent?.fullname,
                 account.phoneNumber
         )

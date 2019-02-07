@@ -21,12 +21,15 @@ interface AccountRepository : JpaRepository<Account, Int> {
     fun countByParentParentIdAndStatus(parentId: Int, status: AccountStatus): Int
     fun countByParentParentParentIdAndStatus(parentId: Int, status: AccountStatus): Int
     fun countByParentParentParentParentIdAndStatus(parentId: Int, status: AccountStatus): Int
-    fun findByFullname(fullname: String?): Account?
+    fun findByFullname(fullname: String?): List<Account>
     @Modifying
     @Query("update Account set parent.id = null where parent.id = :id")
     fun removeChildsByParentId(@Param("id") id: Int)
 
     fun findAllByStatus(status: AccountStatus, pageable: Pageable): Page<Account>
+
+    @Query(value ="SELECT a from Account a where a.level > a.giftGivenForLevel")
+    fun findAllGiftNeededAccounts(pageable: Pageable): Page<Account>
 }
 
 interface RoleRepository : JpaRepository<Role, Int> {

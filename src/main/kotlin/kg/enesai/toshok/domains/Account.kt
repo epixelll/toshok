@@ -35,7 +35,14 @@ class Account(
 
         @ManyToOne
         @JoinColumn(name = "parent_id")
-        var parent: Account?
+        var parent: Account?,
+
+        @Column(name = "level")
+        var level: Int,
+
+        @Column(name = "gift_given_for_level")
+        var giftGivenForLevel: Int
+
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

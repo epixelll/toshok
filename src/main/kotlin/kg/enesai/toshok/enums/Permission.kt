@@ -7,5 +7,6 @@ enum class Permission {
     ACCOUNT_DELETE,
     APPROVE_ACCOUNT,
     USER_MANAGEMENT,
+    GIFT_MANAGEMENT,
     REPORTS
 }

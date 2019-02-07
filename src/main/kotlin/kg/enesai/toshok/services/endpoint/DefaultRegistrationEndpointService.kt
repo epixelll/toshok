@@ -52,7 +52,9 @@ class DefaultRegistrationEndpointService(
                 cell.phoneNumber?.takeIf{ it.isNotBlank() }?.let { it.trim() },
                 date,
                 regionService.findByName(cell.address),
-                accountservice.findByFullname(cell.parentName)
+                accountservice.findByFullname(cell.parentName),
+                1,
+                0
         )
     }
 
@@ -61,7 +63,7 @@ class DefaultRegistrationEndpointService(
         var account = formToAccount(form)
         account = accountservice.create(account)
         userService.createMemberUser(form.phoneNumber!!, form.password!!, account)
-        return AccountDto.of(account, accountservice.getLevel(account))
+        return AccountDto.of(account)
     }
 
     @Throws(Exception::class)
@@ -86,7 +88,9 @@ class DefaultRegistrationEndpointService(
                 dto.phoneNumber,
                 LocalDate.now(),
                 dto.regionId?.let { regionService.get(it) },
-                dto.parentId?.let { accountservice.get(it) }
+                dto.parentId?.let { accountservice.get(it) },
+                1,
+                0
         )
     }
 }

@@ -18,17 +18,22 @@ class DefaultAccountService(
 ) : AccountService {
     @Transactional(readOnly = true)
     override fun findAll(): List<AccountDto> {
-        return accountRepository.findAll().map { AccountDto.of(it, getLevel(it)) }
+        return accountRepository.findAll().map { AccountDto.of(it) }
     }
 
     @Transactional(readOnly = true)
     override fun findAll(pageable: Pageable): Page<AccountDto> {
-        return accountRepository.findAll(pageable).map { AccountDto.of(it, getLevel(it)) }
+        return accountRepository.findAll(pageable).map { AccountDto.of(it) }
+    }
+
+    @Transactional(readOnly = true)
+    override fun findAllGiftNeededAccounts(pageable: Pageable): Page<AccountDto> {
+        return accountRepository.findAllGiftNeededAccounts(pageable).map { AccountDto.of(it) }
     }
 
     @Transactional(readOnly = true)
     override fun findAllPending(pageable: Pageable): Page<AccountDto> {
-        return accountRepository.findAllByStatus(AccountStatus.PENDING, pageable).map { AccountDto.of(it, getLevel(it)) }
+        return accountRepository.findAllByStatus(AccountStatus.PENDING, pageable).map { AccountDto.of(it) }
     }
 
     @Transactional(readOnly = true)
@@ -44,26 +49,33 @@ class DefaultAccountService(
 
     @Transactional
     override fun create(account: Account): Account{
-        account.parent?.
-                takeIf { accountRepository.countByParentIdAndStatus(it.id!!, AccountStatus.APPROVED) >= 4}
-                ?.let { throw IllegalStateException("""Parent Account(id = ${it.id}, name = ${it.fullname}) already has 4 active children""") }
+        account.parent?.let{ parent ->
+            parent.takeIf { accountRepository.countByParentIdAndStatus(it.id!!, AccountStatus.APPROVED) >= 4}
+                    ?.let { throw IllegalStateException("""Parent Account(id = ${it.id}, name = ${it.fullname}) already has 4 active children""") }
+            updateParentLevels(parent)
+        }
+
         return accountRepository.save(account)
     }
 
     @Transactional
     override fun create(accountCreateForm: AccountCreateForm): Account{
         val account = formToAccount(accountCreateForm)
-        account.parent?.
-                takeIf { accountRepository.countByParentIdAndStatus(it.id!!, AccountStatus.APPROVED) >= 4}
-                ?.let { throw IllegalStateException("""Parent Account(id = ${it.id}, name = ${it.fullname}) already has 4 active children""") }
+        account.parent?.let { parent ->
+            parent.takeIf { accountRepository.countByParentIdAndStatus(it.id!!, AccountStatus.APPROVED) >= 4 }
+                    ?.let { throw IllegalStateException("""Parent Account(id = ${it.id}, name = ${it.fullname}) already has 4 active children""") }
+            updateParentLevels(parent)
+        }
         return accountRepository.save(account)
     }
 
     @Transactional
     override fun createAndFlush(account: Account): Account{
-        account.parent?.
-                takeIf { accountRepository.countByParentIdAndStatus(it.id!!, AccountStatus.APPROVED) >= 4}
-                ?.let { throw IllegalStateException("""Parent Account(id = ${it.id}, name = ${it.fullname}) already has 4 active children""") }
+        account.parent?.let {parent ->
+            parent.takeIf { accountRepository.countByParentIdAndStatus(it.id!!, AccountStatus.APPROVED) >= 4 }
+                    ?.let { throw IllegalStateException("""Parent Account(id = ${it.id}, name = ${it.fullname}) already has 4 active children""") }
+            updateParentLevels(parent)
+        }
         val savedAccount = accountRepository.save(account)
         accountRepository.flush()
         return savedAccount
@@ -72,12 +84,15 @@ class DefaultAccountService(
     @Transactional
     override fun update(form: AccountUpdateForm): Account {
         val account = formToAccount(form)
+        account.parent?.let { updateParentLevels(it) }
         return accountRepository.save(account)
     }
 
     @Transactional
     override fun delete(id: Int) {
+        val account = accountRepository.findById(id).orElseThrow { EntityNotFoundException("""Account with id = $id not found""") }
         accountRepository.removeChildsByParentId(id)
+        account.parent?.let { updateParentLevels(it) }
         accountRepository.deleteById(id)
     }
 
@@ -86,17 +101,13 @@ class DefaultAccountService(
         val account = accountRepository.findById(id).orElseThrow { throw EntityNotFoundException("Entity with this id not found") }
         account.status = AccountStatus.APPROVED
         accountRepository.save(account)
+        account.parent?.let { updateParentLevels(it) }
     }
 
 
     @Transactional(readOnly = true)
     override fun findByFullname(fullname: String?): Account? {
-        return accountRepository.findByFullname(fullname)
-    }
-
-    @Transactional
-    override fun saveAll(list: List<Account>) {
-        accountRepository.saveAll(list)
+        return accountRepository.findByFullname(fullname).firstOrNull()
     }
 
     @Transactional(readOnly = true)
@@ -110,6 +121,13 @@ class DefaultAccountService(
         return level
     }
 
+    @Transactional
+    override fun giveGift(id: Int) {
+        val account = accountRepository.findById(id).orElseThrow { throw EntityNotFoundException("Entity with this id not found") }
+        account.giftGivenForLevel = account.giftGivenForLevel + 1
+        accountRepository.save(account)
+    }
+
     @Transactional(readOnly = true)
     override fun findById(id: Int) = accountRepository.findById(id).orElseThrow { EntityNotFoundException("Account with id = $id not found") }!!
 
@@ -117,6 +135,12 @@ class DefaultAccountService(
     override fun getAccountInfo(id: Int): AccountInfo {
         val account = findById(id)
         return mapToAccountInfo(account)
+    }
+
+    private fun updateParentLevels(parent: Account) {
+        parent.level = getLevel(parent)
+        accountRepository.save(parent)
+        parent.parent?.let { updateParentLevels(it) }
     }
 
     private fun mapToAccountInfo(account: Account): AccountInfo {
@@ -136,7 +160,7 @@ class DefaultAccountService(
                 account.status,
                 account.fullname,
                 account.checkNumber,
-                getLevel(account),
+                account.level,
                 account.phoneNumber,
                 account.parent?.fullname,
                 account.parent?.id,
@@ -168,7 +192,9 @@ class DefaultAccountService(
                 createForm.phoneNumber,
                 createForm.registeredDate,
                 createForm.regionId?.let { regionService.get(it) },
-                createForm.parentId?.let { this.get(it) }
+                createForm.parentId?.let { this.get(it) },
+                1,
+                0
         )
     }
 }

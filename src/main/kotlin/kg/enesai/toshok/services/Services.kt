@@ -24,13 +24,14 @@ interface AccountService {
     fun delete(id: Int)
     fun getUpdateForm(id: Int): AccountUpdateForm
     fun findByFullname(fullname: String?): Account?
-    fun saveAll(list: List<Account>)
     fun getLevel(account: Account): Int
     fun createAndFlush(it: Account): Account
     fun findAllPending(pageable: Pageable): Page<AccountDto>
     fun approve(id: Int)
     fun findById(id: Int): Account
     fun getAccountInfo(id: Int): AccountInfo
+    fun findAllGiftNeededAccounts(pageable: Pageable): Page<AccountDto>
+    fun giveGift(id: Int)
 }
 
 interface RoleService {
@@ -47,4 +48,6 @@ interface UserService {
     fun create(userCreateForm: UserCreateForm)
     fun update(userUpdateForm: UserUpdateForm)
     fun delete(id: Int)
+    fun getProfile(): ProfileDto
+    fun changePassword(changePasswordForm: ChangePasswordForm)
 }

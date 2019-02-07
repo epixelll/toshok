@@ -2,14 +2,14 @@ package kg.enesai.toshok.services
 
 import kg.enesai.toshok.domains.Account
 import kg.enesai.toshok.domains.User
-import kg.enesai.toshok.dtos.UserCreateForm
-import kg.enesai.toshok.dtos.UserDto
-import kg.enesai.toshok.dtos.UserUpdateForm
+import kg.enesai.toshok.dtos.*
 import kg.enesai.toshok.repositories.UserRepository
 import org.springframework.data.domain.Pageable
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.lang.IllegalStateException
 import javax.persistence.EntityNotFoundException
 
 @Service
@@ -66,6 +66,24 @@ class DefaultUserService(
     @Transactional
     override fun delete(id: Int) {
         userRepository.deleteById(id)
+    }
+
+    @Transactional(readOnly = true)
+    override fun getProfile(): ProfileDto {
+        val principal = SecurityContextHolder.getContext().authentication.principal as org.springframework.security.core.userdetails.User
+        val user = findByUsername(principal.username)!!
+        return ProfileDto.of(user)
+    }
+
+    @Transactional
+    override fun changePassword(changePasswordForm: ChangePasswordForm) {
+        val principal = SecurityContextHolder.getContext().authentication.principal as org.springframework.security.core.userdetails.User
+        val user = findByUsername(principal.username)!!
+        if(!passwordEncoder.matches(changePasswordForm.oldPassword, user.password)) throw IllegalStateException("Old password doesn't match")
+        user.password = passwordEncoder.encode(changePasswordForm.newPassword)
+        userRepository.save(user)
+        SecurityContextHolder.getContext().authentication = null
+        SecurityContextHolder.clearContext()
     }
 
     private fun formToUser(userCreateForm: UserCreateForm) = User(

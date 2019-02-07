@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head th:include="fragments/header :: headerFragment">
+</head>
+
+<!--<body data-animation-in="fadeIn"  data-animation-out="fadeOut" data-icon="12" data-icon-color="#76aa00" data-speed-in="1000" data-speed-out="500">-->
+<body>
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <div th:replace="fragments/header :: topbar"></div>
+    <div th:replace="fragments/header :: header"></div>
+
+    <!-- Section -->
+    <section class="p-t-20">
+        <div class="container">
+
+            <!--Panel with tables-->
+            <!--<div class="hr-title hr-long center"><abbr>Катталгандар</abbr>-->
+            <!--</div>-->
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Тизмеси</h3>
+                        </div>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>N:</th>
+                                <th>Статусу</th>
+                                <th>Аты жөнү</th>
+                                <th>Тел номуру:</th>
+                                <th>Баскычы</th>
+                                <th>Белектери</th>
+                                <th>Башкаруу</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="account, iter : ${accounts.content}">
+                                <td th:text="${iter.index + 1}">Number</td>
+                                <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).CREATED}">Кошулду</td>
+                                <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).PENDING}">Күтүп жатат</td>
+                                <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).APPROVED}">Тастыкталды</td>
+                                <td th:text="${account.fullname}">Fullname</td>
+                                <td th:text="${account.phoneNumber}">Phone number</td>
+                                <td th:text="${account.level}">level</td>
+                                <td th:text="${account.giftsGiven}">Gifts given</td>
+                                <td>
+                                    <a type="button" class="btn btn-success" th:href="@{'/account/give-gift/' + ${account.id}}">
+                                        <i class="fa fa-gift"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <nav class="text-center m-t-5">
+                        <ul class="pagination">
+                            <li th:class="${accounts.number eq 0} ? 'disabled' : ''">
+                                <a th:if="${not accounts.first}" th:href="@{${'/account/gift-needed'}(page=${accounts.number-1},size=${accounts.size})}" aria-label="Previous"> <span aria-hidden="true"><i class="fa fa-angle-left"></i></span> </a>
+                                <a th:if="${accounts.first}" href="javascript:void(0);" aria-label="Previous"> <span aria-hidden="true"><i class="fa fa-angle-left"></i></span> </a>
+                            </li>
+                            <li th:each="pageNo : ${#numbers.sequence(0, accounts.totalPages - 1)}" th:class="${accounts.number eq pageNo}? 'active' : ''">
+                                <a th:if="${accounts.number  eq pageNo}" href="javascript:void(0);">
+                                    <span th:text="${pageNo + 1}"></span>
+                                </a>
+                                <a th:if="${not (accounts.number  eq pageNo)}" th:href="@{${'/account/gift-needed'}(page=${pageNo},size=${accounts.size})}">
+                                    <span th:text="${pageNo + 1}"></span>
+                                </a>
+
+                            </li>
+                            <li th:class="${accounts.number + 1 ge accounts.totalPages} ? 'disabled' : ''">
+                                <a th:if="${not accounts.last}" th:href="@{${'/account/gift-needed'}(page=${accounts.number+1},size=${accounts.size})}" aria-label="Next"> <span aria-hidden="true"><i class="fa fa-angle-right"></i></span> </a>
+                                <a th:if="${accounts.last}" href="javascript:void(0);" aria-label="Next"> <span aria-hidden="true"><i class="fa fa-angle-right"></i></span> </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+
+            </div>
+            <!--END: Panel with tables-->
+            <hr class="space">
+
+
+        </div>
+    </section>
+    <!-- end: Section -->
+
+    <div th:replace="fragments/footer :: footer"></div>
+
+</div>    <!-- end: Wrapper -->
+
+<!-- Go to top button -->
+<a id="goToTop"><i class="fa fa-angle-up top-icon"></i><i class="fa fa-angle-up"></i></a>
+
+<!--Plugins-->
+<div th:replace="fragments/footer :: scripts"></div>
+
+</body>
+</html>

@@ -23,7 +23,9 @@ create table accounts(
   phone_number VARCHAR(30),
   registered_date DATE,
   region_id BIGINT REFERENCES regions,
-  parent_id BIGINT REFERENCES accounts
+  parent_id BIGINT REFERENCES accounts,
+  level INT NOT NULL default 1,
+  gift_given_for_level INT NOT NULL default 0
 );
 
 create table users(

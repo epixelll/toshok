@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<head th:include="fragments/header :: headerFragment">
+</head>
+
+<!--<body data-animation-in="fadeIn"  data-animation-out="fadeOut" data-icon="12" data-icon-color="#76aa00" data-speed-in="1000" data-speed-out="500">-->
+<body>
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <div th:replace="fragments/header :: topbar"></div>
+    <div th:replace="fragments/header :: header"></div>
+
+    <!-- Section -->
+    <section>
+        <div class="container">
+
+
+            <div class="hr-title hr-long center"><abbr>Профиль</abbr>
+            </div>
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Информация</div>
+                        <table class="table table-striped">
+                            <tbody>
+                            <tr>
+                                <td>Статус</td>
+                                <td th:if="${profile.status == T(kg.enesai.toshok.enums.AccountStatus).CREATED}">Кошулду</td>
+                                <td th:if="${profile.status == T(kg.enesai.toshok.enums.AccountStatus).PENDING}">Күтүп жатат</td>
+                                <td th:if="${profile.status == T(kg.enesai.toshok.enums.AccountStatus).APPROVED}">Тастыкталды</td>
+                            </tr>
+                            <tr>
+                                <td>Аты жөнү</td>
+                                <td th:text="${profile.fullname}">Fullname</td>
+                            </tr>
+                            <tr>
+                                <td>Чек номуру</td>
+                                <td th:text="${profile.checkNumber}">Check number</td>
+                            </tr>
+                            <tr>
+                                <td>Баскыч</td>
+                                <td th:text="${profile.level}">level</td>
+                            </tr>
+                            <tr>
+                                <td>Белек алды</td>
+                                <td th:text="${profile.giftsGiven}">Gifts Given</td>
+                            </tr>
+                            <tr>
+                                <td>Ким аркылуу катталган</td>
+                                <td th:text="${profile.parentName}">Parent Name</td>
+                            </tr>
+                            <tr>
+                                <td>Телефон Номуру</td>
+                                <td th:text="${profile.phoneNumber}">Phone Number</td>
+                            </tr>
+                            <tr>
+                                <td>Колдонуучу аты</td>
+                                <td th:text="${profile.username}">Username</td>
+                            </tr>
+                            <tr>
+                                <td>Ролу</td>
+                                <td th:if="${profile.roleName == 'ADMIN'}">Администратор</td>
+                                <td th:if="${profile.roleName == 'OPERATOR'}">Оператор</td>
+                                <td th:if="${profile.roleName == 'MEMBER'}">Жөнөкөй колдонуучу</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <!--END: Panel with tables-->
+            <hr class="space">
+
+
+        </div>
+    </section>
+    <!-- end: Section -->
+
+    <div th:replace="fragments/footer :: footer"></div>
+
+</div>    <!-- end: Wrapper -->
+
+<!-- Go to top button -->
+<a id="goToTop"><i class="fa fa-angle-up top-icon"></i><i class="fa fa-angle-up"></i></a>
+
+<!--Plugins-->
+<div th:replace="fragments/footer :: scripts"></div>
+
+</body>
+</html>

@@ -1,5 +1,6 @@
 package kg.enesai.toshok.controllers
 
+import kg.enesai.toshok.dtos.ChangePasswordForm
 import kg.enesai.toshok.dtos.UserCreateForm
 import kg.enesai.toshok.dtos.UserUpdateForm
 import kg.enesai.toshok.services.AccountService
@@ -66,5 +67,25 @@ class UserController(
     fun delete(@PathVariable id: Int): String {
         userService.delete(id)
         return "redirect:/user/list"
+    }
+
+    @GetMapping("/profile")
+    fun profile(model: Model): String {
+        model.addAttribute("profile", userService.getProfile())
+        return "user/profile"
+    }
+
+    @GetMapping("/getChangePasswordForm")
+    fun getChangePasswordForm(@ModelAttribute("changePasswordForm") changePasswordForm: ChangePasswordForm, model: Model): String {
+        return "user/changePasswordForm"
+    }
+
+    @PostMapping("/changePassword")
+    fun changePassword(@Valid @ModelAttribute("changePasswordForm") changePasswordForm: ChangePasswordForm, bindingResult: BindingResult, model: Model): String {
+        if(bindingResult.hasErrors()){
+            return "user/changePasswordForm"
+        }
+        userService.changePassword(changePasswordForm)
+        return "redirect:/login"
     }
 }

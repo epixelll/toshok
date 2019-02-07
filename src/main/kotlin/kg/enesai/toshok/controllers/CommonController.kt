@@ -28,9 +28,10 @@ class CommonController(
         if (authentication.authorities.map { it.authority }.contains(Permission.APPROVE_ACCOUNT.toString())) return "redirect:/account/approve-list"
         if (authentication.authorities.map { it.authority }.contains(Permission.ACCOUNT_VIEW.toString())) return "redirect:/account/list"
 
-        val user = authentication.principal as User
-        val userId = userService.findByUsername(user.username)?.id
+        val principal = authentication.principal as User
+        val user = userService.findByUsername(principal.username)!!
 
-        return """redirect:/account/info/$userId"""
+        if(user.account == null) return "redirect:/user/profile"
+        return """redirect:/account/info/${user.account?.id}"""
     }
 }

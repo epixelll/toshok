@@ -77,11 +77,12 @@
                                 <li sec:authorize="hasAuthority('USER_MANAGEMENT')"><a th:href="@{/user/list}">Колдонуучулар</a></li>
                                 <li sec:authorize="hasAuthority('APPROVE_ACCOUNT')"><a th:href="@{/account/approve-list}">Тастыкталуу үчун</a></li>
                                 <li sec:authorize="hasAuthority('ACCOUNT_VIEW')"><a th:href="@{/account/list}">Катталгандар</a></li>
+                                <li sec:authorize="hasAuthority('GIFT_MANAGEMENT')"><a th:href="@{/account/gift-needed}">Белектер</a></li>
                                 <li class="dropdown"><a href="#">Провиль</a>
                                     <ul class="dropdown-menu" style="right: 2px;">
                                         <li><span th:text="${#authentication.principal.username}"></span> </li>
-                                        <li><a th:href="@{/profile}"><i class="fa fa-user"></i>Профиль</a></li>
-                                        <li><a th:href="@{/user/changePassword}"><i class="fa fa-key"></i>Сырсөздү алмаштыруу</a></li>
+                                        <li><a th:href="@{/user/profile}"><i class="fa fa-user"></i>Профиль</a></li>
+                                        <li><a th:href="@{/user/getChangePasswordForm}"><i class="fa fa-key"></i>Сырсөздү алмаштыруу</a></li>
                                         <li><a th:href="@{/logout}"><i class="fa fa-sign-out"></i>Чыгуу</a></li>
 
                                     </ul>
