@@ -2,9 +2,14 @@ package kg.enesai.toshok.controllers
 
 import kg.enesai.toshok.dtos.AccountCreateForm
 import kg.enesai.toshok.dtos.AccountUpdateForm
+import kg.enesai.toshok.enums.Permission
 import kg.enesai.toshok.services.AccountService
 import kg.enesai.toshok.services.RegionService
+import kg.enesai.toshok.services.UserService
 import org.springframework.data.domain.Pageable
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.userdetails.User
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
@@ -15,7 +20,8 @@ import javax.validation.Valid
 @RequestMapping("account")
 class AccountController(
         private val accountService: AccountService,
-        private val regionService: RegionService
+        private val regionService: RegionService,
+        private val userService: UserService
 ) {
     @GetMapping("/list")
     fun getAccountList(pageable: Pageable, model: Model): String {
@@ -24,7 +30,12 @@ class AccountController(
     }
 
     @GetMapping("/info/{id}")
-    fun getAccountInfo(@PathVariable id: Int, model: Model): String {
+    fun getAccountInfo(authentication: Authentication, @PathVariable id: Int, model: Model): String {
+        val user = authentication.principal as User
+        val userId = userService.findByUsername(user.username)?.id
+        if(!authentication.authorities.map { it.authority }.contains(Permission.ACCOUNT_VIEW.toString()) && id != userId ){
+            return """redirect:/account/info/$userId"""
+        }
         model.addAttribute("account", accountService.getAccountInfo(id))
         return "account/accountInfo"
     }

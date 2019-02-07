@@ -1,11 +1,17 @@
 package kg.enesai.toshok.controllers
 
+import kg.enesai.toshok.enums.Permission
+import kg.enesai.toshok.services.UserService
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.userdetails.User
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 
 @Controller
-class CommonController {
+class CommonController(
+        private val userService: UserService
+) {
 
     @GetMapping("/login")
     fun login(): String {
@@ -18,7 +24,13 @@ class CommonController {
     }
 
     @GetMapping("/dashboard")
-    fun dashboard(model: Model): String {
-        return "dashboard"
+    fun dashboard(authentication: Authentication, model: Model): String {
+        if (authentication.authorities.map { it.authority }.contains(Permission.APPROVE_ACCOUNT.toString())) return "redirect:/account/approve-list"
+        if (authentication.authorities.map { it.authority }.contains(Permission.ACCOUNT_VIEW.toString())) return "redirect:/account/list"
+
+        val user = authentication.principal as User
+        val userId = userService.findByUsername(user.username)?.id
+
+        return """redirect:/account/info/$userId"""
     }
 }

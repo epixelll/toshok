@@ -125,9 +125,10 @@ class DefaultAccountService(
                     child.id!!,
                     child.fullname,
                     child.status,
-                    child.children.map {SubchildAccountDto(it.id!!, it.fullname, it.status)},
-                    child.children.flatMap{it.children.map { SubchildAccountDto(it.id!!, it.fullname, it.status) }},
-                    child.children.flatMap{it.children.flatMap { it.children.map { SubchildAccountDto(it.id!!, it.fullname, it.status) }}}
+                    child.phoneNumber,
+                    child.children.map {SubchildAccountDto(it.id!!, it.fullname, it.status, it.phoneNumber)},
+                    child.children.flatMap{it.children.map { SubchildAccountDto(it.id!!, it.fullname, it.status, it.phoneNumber) }},
+                    child.children.flatMap{it.children.flatMap { it.children.map { SubchildAccountDto(it.id!!, it.fullname, it.status, it.phoneNumber)}}}
             )
         }
         return AccountInfo(
