@@ -49,7 +49,7 @@
             <div class="container"> <!--Logo-->
                 <div id="logo">
                     <a th:href="@{/}" class="logo" th:data-dark-logo="@{../images/logo.png}">
-                        <img th:src="@{../images/logo.png}" alt="Polo Logo">
+                        <img th:src="@{/images/logo.png}" alt="Logo">
                     </a>
                 </div>
                 <!--End: Logo-->
@@ -74,7 +74,7 @@
                                     </ul>
                                 </li>
                                 <li><a href="http://kyrgyzoimoloru.kg">Вебсайт</a></li>
-                                <li sec:authorize="hasAuthority('USER_MANAGEMENT')"><a th:href="@{/admin/users}">Колдонуучулар</a></li>
+                                <li sec:authorize="hasAuthority('USER_MANAGEMENT')"><a th:href="@{/user/list}">Колдонуучулар</a></li>
                                 <li sec:authorize="hasAuthority('APPROVE_ACCOUNT')"><a th:href="@{/account/approve-list}">Тастыкталуу үчун</a></li>
                                 <li sec:authorize="hasAuthority('ACCOUNT_VIEW')"><a th:href="@{/account/list}">Катталгандар</a></li>
                                 <li class="dropdown"><a href="#">Провиль</a>

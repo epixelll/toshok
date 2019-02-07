@@ -25,7 +25,7 @@
 
     <!-- Section -->
     <!--<section class="fullscreen" th:style="'background-image:url(' + @{/images/pages/1.jpg} + '); overflow: scroll'">-->
-    <section class="fullscreen" style="background-color: #F0F2F2">
+    <section class="fullscreen p-t-10" style="background-color: #F0F2F2">
         <div class="container container-fullscreen">
             <div class="text-middle">
                 <!--<div class="text-center m-b-30">-->
@@ -35,7 +35,7 @@
                 <!--</div>-->
                 <div class="row">
                     <div class="col-md-4 center p-30 background-white b-r-6">
-                        <form action="#" th:action="@{/user/update}" th:object="${accountUpdateForm}" th:method="post" class="form-transparent-grey">
+                        <form action="#" th:action="@{/user/update}" th:object="${userUpdateForm}" th:method="post" class="form-transparent-grey">
                             <div class="row">
                                 <div class="col-md-12">
                                     <h3>Каттоо</h3>
@@ -52,7 +52,6 @@
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Роль</label>
                                     <select th:field="*{roleId}">
-                                        <option value="" selected disabled>Роль</option>
                                         <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
                                     </select>
                                     <span th:if="${#fields.hasErrors('roleId')}" th:errors="*{roleId}" class="text-red">Role should be selected</span>
@@ -72,9 +71,6 @@
                                 <div class="col-md-6 form-group">
                                     <label class="sr-only">Сырсөздү кайталоо</label>
                                     <input id="confirm_password" type="password" value="" placeholder="Сырсөздү кайталоо" class="form-control input-lg">
-                                </div>
-                                <div class="col-md-12 form-group">
-                                    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-red">Password can't be blank</span>
                                 </div>
 
                                 <div class="col-md-12 form-group">

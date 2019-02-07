@@ -23,6 +23,12 @@ class AccountController(
         return "account/accountList"
     }
 
+    @GetMapping("/info/{id}")
+    fun getAccountInfo(@PathVariable id: Int, model: Model): String {
+        model.addAttribute("account", accountService.getAccountInfo(id))
+        return "account/accountInfo"
+    }
+
     @GetMapping("/getAccountCreateForm")
     fun getAccountCreateForm(@ModelAttribute("accountCreateForm") accountCreateForm: AccountCreateForm, model: Model): String {
         model.addAttribute("regions", regionService.findAll())

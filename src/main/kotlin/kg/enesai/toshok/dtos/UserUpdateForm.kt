@@ -11,7 +11,6 @@ data class UserUpdateForm(
         @field:NotBlank
         var username: String?,
 
-        @field:NotBlank
         var password: String?,
 
         @field:NotNull

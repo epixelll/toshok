@@ -40,4 +40,8 @@ class Account(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null
+
+
+    @OneToMany(mappedBy = "parent")
+    var children: List<Account> = mutableListOf()
 }

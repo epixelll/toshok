@@ -3,6 +3,7 @@ package kg.enesai.toshok.controllers
 import kg.enesai.toshok.dtos.UserCreateForm
 import kg.enesai.toshok.dtos.UserUpdateForm
 import kg.enesai.toshok.services.AccountService
+import kg.enesai.toshok.services.RoleService
 import kg.enesai.toshok.services.UserService
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Controller
@@ -15,7 +16,8 @@ import javax.validation.Valid
 @RequestMapping("user")
 class UserController(
         private val userService: UserService,
-        private val accountService: AccountService
+        private val accountService: AccountService,
+        private val roleService: RoleService
 ) {
     @GetMapping("/list")
     fun getUserList(pageable: Pageable, model: Model): String {
@@ -25,6 +27,7 @@ class UserController(
 
     @GetMapping("/getUserCreateForm")
     fun getUserCreateForm(@ModelAttribute("userCreateForm") userCreateForm: UserCreateForm, model: Model): String {
+        model.addAttribute("roles", roleService.findAll())
         model.addAttribute("accounts", accountService.findAll())
         return "user/userCreateForm"
     }
@@ -32,6 +35,7 @@ class UserController(
     @GetMapping("/getUserUpdateForm/{id}")
     fun getUserUpdateForm(@PathVariable id: Int, model: Model): String {
         model.addAttribute("userUpdateForm", userService.getUpdateForm(id))
+        model.addAttribute("roles", roleService.findAll())
         model.addAttribute("accounts", accountService.findAll())
         return "user/userUpdateForm"
     }
@@ -39,6 +43,7 @@ class UserController(
     @PostMapping()
     fun create(@Valid @ModelAttribute("userCreateForm") userCreateForm: UserCreateForm, bindingResult: BindingResult, model: Model): String {
         if(bindingResult.hasErrors()){
+            model.addAttribute("roles", roleService.findAll())
             model.addAttribute("accounts", accountService.findAll())
             return "user/userCreateForm"
         }
@@ -49,6 +54,7 @@ class UserController(
     @PostMapping("/update")
     fun update(@Valid @ModelAttribute("userUpdateForm") userUpdateForm: UserUpdateForm, bindingResult: BindingResult, model: Model): String {
         if(bindingResult.hasErrors()){
+            model.addAttribute("roles", roleService.findAll())
             model.addAttribute("accounts", accountService.findAll())
             return "user/userUpdateForm"
         }

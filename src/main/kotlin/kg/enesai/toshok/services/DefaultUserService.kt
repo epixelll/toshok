@@ -3,6 +3,7 @@ package kg.enesai.toshok.services
 import kg.enesai.toshok.domains.Account
 import kg.enesai.toshok.domains.User
 import kg.enesai.toshok.dtos.UserCreateForm
+import kg.enesai.toshok.dtos.UserDto
 import kg.enesai.toshok.dtos.UserUpdateForm
 import kg.enesai.toshok.repositories.UserRepository
 import org.springframework.data.domain.Pageable
@@ -35,7 +36,7 @@ class DefaultUserService(
     }
 
     @Transactional(readOnly = true)
-    override fun findAll(pageable: Pageable) = userRepository.findAll(pageable)
+    override fun findAll(pageable: Pageable) = userRepository.findAll(pageable).map { UserDto.of(it) }
 
     @Transactional(readOnly = true)
     override fun getUpdateForm(id: Int): UserUpdateForm {
@@ -54,7 +55,7 @@ class DefaultUserService(
         var user = userRepository.findById(userUpdateForm.id).orElseThrow { EntityNotFoundException("User with id = ${userUpdateForm.id} is not found") }
         user.apply {
             this.username = userUpdateForm.username!!
-            this.password = passwordEncoder.encode(userUpdateForm.password)
+            userUpdateForm.password?.takeIf { it.isNotBlank() }?.let{ this.password = passwordEncoder.encode(it) }
             this.role = roleService.findById(userUpdateForm.roleId!!)
             this.account = userUpdateForm.accountId?.let { accountService.findById(it) }
         }.apply {

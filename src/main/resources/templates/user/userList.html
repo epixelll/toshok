@@ -48,7 +48,7 @@
                                 <td th:if="${user.roleName == 'ADMIN'}">Администратор</td>
                                 <td th:if="${user.roleName == 'OPERATOR'}">Оператор</td>
                                 <td th:if="${user.roleName == 'MEMBER'}">Жөнөкөй колдонуучу</td>
-                                <td th:text="${user.accountName}">Account Name</td>
+                                <td th:text="${user.accountFullname}">Account Name</td>
                                 <td>
                                     <a type="button" class="btn btn-light" th:href="@{'/user/getUserUpdateForm/' + ${user.id}}">
                                         <i class="fa fa-cog"></i>

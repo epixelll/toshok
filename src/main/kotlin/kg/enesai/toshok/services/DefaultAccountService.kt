@@ -1,9 +1,7 @@
 package kg.enesai.toshok.services
 
 import kg.enesai.toshok.domains.Account
-import kg.enesai.toshok.dtos.AccountDto
-import kg.enesai.toshok.dtos.AccountCreateForm
-import kg.enesai.toshok.dtos.AccountUpdateForm
+import kg.enesai.toshok.dtos.*
 import kg.enesai.toshok.enums.AccountStatus
 import kg.enesai.toshok.repositories.AccountRepository
 import org.springframework.data.domain.Page
@@ -112,7 +110,38 @@ class DefaultAccountService(
         return level
     }
 
+    @Transactional(readOnly = true)
     override fun findById(id: Int) = accountRepository.findById(id).orElseThrow { EntityNotFoundException("Account with id = $id not found") }!!
+
+    @Transactional
+    override fun getAccountInfo(id: Int): AccountInfo {
+        val account = findById(id)
+        return mapToAccountInfo(account)
+    }
+
+    private fun mapToAccountInfo(account: Account): AccountInfo {
+        val children = account.children.filter { it.status == AccountStatus.APPROVED }.takeIf { it.isNotEmpty() }?.map {child ->
+            ChildAccountDto(
+                    child.id!!,
+                    child.fullname,
+                    child.status,
+                    child.children.map {SubchildAccountDto(it.id!!, it.fullname, it.status)},
+                    child.children.flatMap{it.children.map { SubchildAccountDto(it.id!!, it.fullname, it.status) }},
+                    child.children.flatMap{it.children.flatMap { it.children.map { SubchildAccountDto(it.id!!, it.fullname, it.status) }}}
+            )
+        }
+        return AccountInfo(
+                account.id!!,
+                account.status,
+                account.fullname,
+                account.checkNumber,
+                getLevel(account),
+                account.phoneNumber,
+                account.parent?.fullname,
+                account.parent?.id,
+                children
+        )
+    }
 
     private fun formToAccount(form: AccountUpdateForm): Account {
         val account = get(form.id)
