@@ -80,7 +80,7 @@ class DefaultRegistrationEndpointService(
 
     private fun formToAccount(dto: RegisterForm): Account {
         return Account(
-                dto.checkNumber?.let { AccountStatus.CREATED } ?: AccountStatus.PENDING,
+                dto.checkNumber?.let { AccountStatus.PENDING } ?: AccountStatus.CREATED,
                 dto.fullname!!,
                 dto.address!!,
                 dto.checkNumber,
