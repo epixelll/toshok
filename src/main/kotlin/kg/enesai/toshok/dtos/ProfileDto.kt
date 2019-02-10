@@ -20,7 +20,7 @@ data class ProfileDto(
                 user.account?.fullname,
                 user.account?.checkNumber,
                 user.account?.level,
-                user.account?.giftGivenForLevel,
+                user.account?.gifts?.size,
                 user.account?.parent?.fullname,
                 user.account?.phoneNumber,
                 user.username,

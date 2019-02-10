@@ -1,6 +1,7 @@
 package kg.enesai.toshok.dtos
 
 import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDate
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
@@ -14,6 +15,8 @@ data class AccountCreateForm(
         var address: String?,
 
         var checkNumber: String?,
+
+        var checkPhoto: MultipartFile?,
 
         @field:NotBlank
         var passportNumber: String?,

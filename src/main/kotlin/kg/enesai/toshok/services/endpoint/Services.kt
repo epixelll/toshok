@@ -9,3 +9,7 @@ interface RegistrationEndpointService {
     fun register(form: RegisterForm): AccountDto
     fun import(file: InputStreamSource)
 }
+
+interface FileUploadEndpointService {
+    fun saveUploadedFile(file: MultipartFile): String?
+}

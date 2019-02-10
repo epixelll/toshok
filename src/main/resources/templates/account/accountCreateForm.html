@@ -35,7 +35,7 @@
                 <!--</div>-->
                 <div class="row">
                     <div class="col-md-4 center p-30 background-white b-r-6">
-                        <form action="#" th:action="@{/account}" th:object="${accountCreateForm}" method="post" class="form-transparent-grey">
+                        <form action="#" th:action="@{/account}" th:object="${accountCreateForm}" method="post" enctype="multipart/form-data" class="form-transparent-grey">
                             <div class="row">
                                 <div class="col-md-12">
                                     <h3>Каттоо</h3>
@@ -56,6 +56,10 @@
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Чектин Номуру</label>
                                     <input th:field="*{checkNumber}" type="text" value="" placeholder="Чектин Номуру" class="form-control input-lg">
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label class="sr-only">Чектин Суроту</label>
+                                    <input th:field="*{checkPhoto}" type="file" value="" placeholder="Чектин Суроту" class="form-control input-lg">
                                 </div>
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Паспорт Номуру</label>

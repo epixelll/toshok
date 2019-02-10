@@ -7,6 +7,7 @@ data class AccountInfo(
         val status: AccountStatus,
         val fullname: String,
         val checkNumber: String?,
+        val checkPath: String?,
         val level: Int,
         val phoneNumber: String?,
         val parentName: String?,

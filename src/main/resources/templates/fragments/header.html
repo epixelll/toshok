@@ -66,19 +66,19 @@
                         <nav>
                             <ul>
                                 <li><a th:href="@{/dashboard}">Башкы бет</a></li>
-                                <li sec:authorize="hasAuthority('REPORTS')" class="dropdown"><a href="#">Отчеттер</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a th:href="@{/list}"><i class="fa fa-th"></i>Жалпы тизме</a></li>
-                                        <li><a th:href="@{/last-month}"><i class="fa fa-window-minimize"></i>Акыркы Айда</a></li>
+                                <!--<li sec:authorize="hasAuthority('REPORTS')" class="dropdown"><a href="#">Отчеттер</a>-->
+                                    <!--<ul class="dropdown-menu">-->
+                                        <!--<li><a th:href="@{/list}"><i class="fa fa-th"></i>Жалпы тизме</a></li>-->
+                                        <!--<li><a th:href="@{/last-month}"><i class="fa fa-window-minimize"></i>Акыркы Айда</a></li>-->
 
-                                    </ul>
-                                </li>
+                                    <!--</ul>-->
+                                <!--</li>-->
                                 <li><a href="http://kyrgyzoimoloru.kg">Вебсайт</a></li>
-                                <li sec:authorize="hasAuthority('USER_MANAGEMENT')"><a th:href="@{/user/list}">Колдонуучулар</a></li>
-                                <li sec:authorize="hasAuthority('APPROVE_ACCOUNT')"><a th:href="@{/account/approve-list}">Тастыкталуу үчун</a></li>
+                                <li sec:authorize="hasAuthority('USER_VIEW')"><a th:href="@{/user/list}">Колдонуучулар</a></li>
+                                <li sec:authorize="hasAuthority('ACCOUNT_APPROVE')"><a th:href="@{/account/approve-list}">Тастыкталуу үчун</a></li>
                                 <li sec:authorize="hasAuthority('ACCOUNT_VIEW')"><a th:href="@{/account/list}">Катталгандар</a></li>
-                                <li sec:authorize="hasAuthority('GIFT_MANAGEMENT')"><a th:href="@{/account/gift-needed}">Белектер</a></li>
-                                <li class="dropdown"><a href="#">Провиль</a>
+                                <li sec:authorize="hasAuthority('GIFT_VIEW')"><a th:href="@{/gift/gift-needed}">Белектер</a></li>
+                                <li class="dropdown"><a href="#">Профиль</a>
                                     <ul class="dropdown-menu" style="right: 2px;">
                                         <li><span th:text="${#authentication.principal.username}"></span> </li>
                                         <li><a th:href="@{/user/profile}"><i class="fa fa-user"></i>Профиль</a></li>

@@ -13,7 +13,6 @@ data class UserUpdateForm(
 
         var password: String?,
 
-        @field:NotNull
         var roleId: Int?,
 
         var accountId: Int?

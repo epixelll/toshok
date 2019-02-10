@@ -26,7 +26,8 @@ import java.time.format.DateTimeParseException
 class DefaultRegistrationEndpointService(
         private val userService: UserService,
         private val accountservice: AccountService,
-        private val regionService: RegionService
+        private val regionService: RegionService,
+        private val fileUploadEndpointService: FileUploadEndpointService
 ) : RegistrationEndpointService {
 
     var formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
@@ -34,8 +35,9 @@ class DefaultRegistrationEndpointService(
     override fun import(file: InputStreamSource) {
         readCsv(file.inputStream).forEach{ accountCell ->
             val account = cellToAccount(accountCell)
-            account?.let { accountservice.create(it) }
+            account?.let { accountservice.createFromExcel(it) }
         }
+//        accountservice.deleteTemporary()
     }
 
     private fun cellToAccount(cell: AccountCell): Account? {
@@ -43,19 +45,43 @@ class DefaultRegistrationEndpointService(
         var date: LocalDate? = null
         try{date = cell.registeredDate?.let{LocalDate.parse(it, formatter)}}
         catch (ex: DateTimeParseException) {}
-        return Account(
+        var parent = cell.parentName?.takeIf { it.isNotBlank() && it != "0" }?.let {
+            accountservice.findByFullname(cell.parentName?.trim()) ?: accountservice.createTemporalAccount(it)
+        }
+        if(hasParentConflict(parent, cell.fullname?.trim()!!)) parent = null
+        return accountservice.findByFullname(cell.fullname?.trim())?.let {
+             it.apply {
+                this.status = AccountStatus.APPROVED
+                this.address = cell.address?.takeIf{ it.isNotBlank() }?.let { it.trim() }
+                this.checkNumber = cell.checkNumber?.takeIf{ it.isNotBlank() }?.let { it.trim() }
+                this.passportNumber = cell.passportNumer?.takeIf{ it.isNotBlank() }?.let { it.trim() }
+                this.phoneNumber = cell.phoneNumber?.takeIf{ it.isNotBlank() }?.let { it.trim() }
+                this.registeredDate = date
+                this.region = regionService.findByName(cell.address)
+                this.parent = parent
+            }
+        } ?: Account(
                 AccountStatus.APPROVED,
                 cell.fullname!!.trim(),
                 cell.address?.takeIf{ it.isNotBlank() }?.let { it.trim() },
                 cell.checkNumber?.takeIf{ it.isNotBlank() }?.let { it.trim() },
+                null,
                 cell.passportNumer?.takeIf{ it.isNotBlank() }?.let { it.trim() },
                 cell.phoneNumber?.takeIf{ it.isNotBlank() }?.let { it.trim() },
                 date,
                 regionService.findByName(cell.address),
-                accountservice.findByFullname(cell.parentName),
-                1,
-                0
+                parent,
+                1
         )
+    }
+
+    private fun hasParentConflict(parent: Account?, fullname: String): Boolean {
+        var nextParent = parent
+        while(nextParent != null){
+            if(nextParent.fullname == fullname) return true
+            nextParent = nextParent.parent
+        }
+        return false
     }
 
     @Transactional
@@ -79,18 +105,20 @@ class DefaultRegistrationEndpointService(
     }
 
     private fun formToAccount(dto: RegisterForm): Account {
+        val photoPath = dto.checkPhoto?.let { fileUploadEndpointService.saveUploadedFile(it) }
+        val status = if(photoPath == null && (dto.checkNumber == null || dto.checkNumber!!.isBlank())) AccountStatus.CREATED else AccountStatus.PENDING
         return Account(
-                dto.checkNumber?.let { AccountStatus.PENDING } ?: AccountStatus.CREATED,
+                status,
                 dto.fullname!!,
                 dto.address!!,
                 dto.checkNumber,
+                photoPath,
                 dto.passportNumber,
                 dto.phoneNumber,
                 LocalDate.now(),
                 dto.regionId?.let { regionService.get(it) },
                 dto.parentId?.let { accountservice.get(it) },
-                1,
-                0
+                1
         )
     }
 }

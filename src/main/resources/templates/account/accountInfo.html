@@ -4,11 +4,21 @@
 
 
 <head th:include="fragments/header :: headerFragment">
+
+
 </head>
 
 <!--<body data-animation-in="fadeIn"  data-animation-out="fadeOut" data-icon="12" data-icon-color="#76aa00" data-speed-in="1000" data-speed-out="500">-->
 <body>
-
+<style type="text/css">
+    .panel .table th, .panel .table td {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+    }
+    #test {
+        padding-left: 5px !important;
+    }
+</style>
 <!-- Wrapper -->
 <div id="wrapper">
 
@@ -17,42 +27,68 @@
 
     <!-- Section -->
     <section>
-        <div class="container">
+        <div class="container-fluid ">
 
             <!--Panels default-->
             <div class="hr-title hr-long center"><abbr>Каттоо эсеби</abbr>
             </div>
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-8">
                     <div class="panel panel-default">
                         <div class="panel-heading">Эсеп жөнүндө маалымат</div>
                         <table class="table">
-                            <thead>
-                            <tr>
-                                <th>Статусу</th>
-                                <th>Аты жөнү</th>
-                                <th>Баскычы</th>
-                                <th>Кимге байланган</th>
-                                <th>Тел номуру:</th>
-                            </tr>
-                            </thead>
                             <tbody>
                             <tr>
-                                <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).CREATED}">Кошулду</td>
+                                <td>Статусу</td>
+                                <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).CREATED}">Чек жок</td>
                                 <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).PENDING}">Күтүп жатат</td>
                                 <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).APPROVED}">Тастыкталды</td>
+                                <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).TEMPORARY}">Катаа катталган</td>
+                            </tr>
+                            <tr>
+                                <td id="test">Аты жөнү</td>
                                 <td th:text="${account.fullname}">Fullname</td>
+                            </tr>
+                            <tr>
+                                <td>Баскычы</td>
                                 <td th:text="${account.level}">Region</td>
+                            </tr>
+                            <tr>
+                                <td>Кимге байланган</td>
                                 <td>
-                                    <a th:if="${account.parentId != null}" type="button" class="btn btn-default" th:href="@{'/account/info/' + ${account.parentId}}">
+                                    <a th:if="${account.parentId != null}" th:href="@{'/account/info/' + ${account.parentId}}">
                                         <span th:text="${account.parentName}">parent</span>
                                     </a>
                                 </td>
+                            </tr>
+                            <tr>
+                                <td>Тел номуру:</td>
                                 <td th:text="${account.phoneNumber}">Phone number</td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div class="col-md-4">
+                    <img style="width: 200px" th:src="@{'/' + ${account.checkPath}}"/>
+                </div>
+                <div class="col-md-12">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Белектин аталышы</th>
+                            <th>Белектин баяндамасы</th>
+                            <th>Берилген күнү</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="gift, iter : ${gifts}">
+                            <td th:text="${gift.name}">Name</td>
+                            <td th:text="${gift.description}">Description</td>
+                            <td th:text="${#temporals.format(gift.givenDate, 'dd.MM.yyyy')}">Given date</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <!--END: Panels default-->
@@ -65,12 +101,12 @@
             <div th:each="child, iter : ${account.children}" th:class="'col-md-' + ${12/account.children.size()}">
                 <div>
                     <div class="panel panel-success">
-                        <div class="panel-heading">Биринчи тизмедегилер</div>
+                        <div class="panel-heading">Экинчи тизмедегилер</div>
                         <table class="table table-striped">
                             <thead>
                             <tr>
                                 <th>Аты жөнү</th>
-                                <th>Статусу</th>
+                                <th><i class="fa fa-gift"></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -80,9 +116,7 @@
                                         <span th:text="${child.fullname}">parent</span>
                                     </a>
                                 </td>
-                                <td th:if="${child.status == T(kg.enesai.toshok.enums.AccountStatus).CREATED}">Кошулду</td>
-                                <td th:if="${child.status == T(kg.enesai.toshok.enums.AccountStatus).PENDING}">Күтүп жатат</td>
-                                <td th:if="${child.status == T(kg.enesai.toshok.enums.AccountStatus).APPROVED}">Тастыкталды</td>
+                                <td th:text="${child.giftsGiven}"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -91,12 +125,13 @@
 
                 <div>
                     <div class="panel panel-info">
-                        <div class="panel-heading">Экинчи тизмедегилер</div>
+                        <div class="panel-heading">Үчүнчү тизмедегилер</div>
                         <table class="table table-striped">
                             <thead>
                             <tr>
                                 <th>Аты жөнү</th>
-                                <th>Статус</th>
+                                <th>Кимге Байланган</th>
+                                <th><i class="fa fa-gift"></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -106,9 +141,8 @@
                                         <span th:text="${child2.fullname}">parent</span>
                                     </a>
                                 </td>
-                                <td th:if="${child2.status == T(kg.enesai.toshok.enums.AccountStatus).CREATED}">Кошулду</td>
-                                <td th:if="${child2.status == T(kg.enesai.toshok.enums.AccountStatus).PENDING}">Күтүп жатат</td>
-                                <td th:if="${child2.status == T(kg.enesai.toshok.enums.AccountStatus).APPROVED}">Тастыкталды</td>
+                                <td th:text="${child2.parentName}"></td>
+                                <td th:text="${child2.giftsGiven}"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -117,12 +151,13 @@
 
                 <div>
                     <div class="panel panel-danger">
-                        <div class="panel-heading">Үчүнчү тизмедегилер</div>
+                        <div class="panel-heading">Төртүнчү тизмедегилер</div>
                         <table class="table table-striped">
                             <thead>
                             <tr>
                                 <th>Аты жөнү</th>
-                                <th>Статус</th>
+                                <th>Кимге Байланган</th>
+                                <th><i class="fa fa-gift"></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -132,9 +167,8 @@
                                         <span th:text="${child3.fullname}">parent</span>
                                     </a>
                                 </td>
-                                <td th:if="${child3.status == T(kg.enesai.toshok.enums.AccountStatus).CREATED}">Кошулду</td>
-                                <td th:if="${child3.status == T(kg.enesai.toshok.enums.AccountStatus).PENDING}">Күтүп жатат</td>
-                                <td th:if="${child3.status == T(kg.enesai.toshok.enums.AccountStatus).APPROVED}">Тастыкталды</td>
+                                <td th:text="${child3.parentName}"></td>
+                                <td th:text="${child3.giftsGiven}"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -143,12 +177,13 @@
 
                 <div >
                     <div class="panel panel-primary">
-                        <div class="panel-heading">Төртүнчү тизмедегилер</div>
+                        <div class="panel-heading">Бешинчи тизмедегилер</div>
                         <table class="table table-striped">
                             <thead>
                             <tr>
                                 <th>Аты жөнү</th>
-                                <th>Статус</th>
+                                <th>Кимге Байланган</th>
+                                <th><i class="fa fa-gift"></i></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -158,9 +193,8 @@
                                         <span th:text="${child4.fullname}">parent</span>
                                     </a>
                                 </td>
-                                <td th:if="${child4.status == T(kg.enesai.toshok.enums.AccountStatus).CREATED}">Кошулду</td>
-                                <td th:if="${child4.status == T(kg.enesai.toshok.enums.AccountStatus).PENDING}">Күтүп жатат</td>
-                                <td th:if="${child4.status == T(kg.enesai.toshok.enums.AccountStatus).APPROVED}">Тастыкталды</td>
+                                <td th:text="${child4.parentName}"></td>
+                                <td th:text="${child4.giftsGiven}"></td>
                             </tr>
                             </tbody>
                         </table>

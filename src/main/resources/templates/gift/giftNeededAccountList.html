@@ -43,7 +43,7 @@
                             <tbody>
                             <tr th:each="account, iter : ${accounts.content}">
                                 <td th:text="${iter.index + 1}">Number</td>
-                                <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).CREATED}">Кошулду</td>
+                                <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).CREATED}">Чек жок</td>
                                 <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).PENDING}">Күтүп жатат</td>
                                 <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).APPROVED}">Тастыкталды</td>
                                 <td th:text="${account.fullname}">Fullname</td>
@@ -51,7 +51,10 @@
                                 <td th:text="${account.level}">level</td>
                                 <td th:text="${account.giftsGiven}">Gifts given</td>
                                 <td>
-                                    <a type="button" class="btn btn-success" th:href="@{'/account/give-gift/' + ${account.id}}">
+                                    <a type="button" class="btn btn-info" th:href="@{'/account/info/' + ${account.id}}">
+                                        <i class="fa fa-info"></i>
+                                    </a>
+                                    <a type="button" class="btn btn-success" th:href="@{'/gift/getGiftCreateForm/' + ${account.id}}">
                                         <i class="fa fa-gift"></i>
                                     </a>
                                 </td>
@@ -63,20 +66,20 @@
                     <nav class="text-center m-t-5">
                         <ul class="pagination">
                             <li th:class="${accounts.number eq 0} ? 'disabled' : ''">
-                                <a th:if="${not accounts.first}" th:href="@{${'/account/gift-needed'}(page=${accounts.number-1},size=${accounts.size})}" aria-label="Previous"> <span aria-hidden="true"><i class="fa fa-angle-left"></i></span> </a>
+                                <a th:if="${not accounts.first}" th:href="@{${'/gift/gift-needed'}(page=${accounts.number-1},size=${accounts.size})}" aria-label="Previous"> <span aria-hidden="true"><i class="fa fa-angle-left"></i></span> </a>
                                 <a th:if="${accounts.first}" href="javascript:void(0);" aria-label="Previous"> <span aria-hidden="true"><i class="fa fa-angle-left"></i></span> </a>
                             </li>
                             <li th:each="pageNo : ${#numbers.sequence(0, accounts.totalPages - 1)}" th:class="${accounts.number eq pageNo}? 'active' : ''">
                                 <a th:if="${accounts.number  eq pageNo}" href="javascript:void(0);">
                                     <span th:text="${pageNo + 1}"></span>
                                 </a>
-                                <a th:if="${not (accounts.number  eq pageNo)}" th:href="@{${'/account/gift-needed'}(page=${pageNo},size=${accounts.size})}">
+                                <a th:if="${not (accounts.number  eq pageNo)}" th:href="@{${'/gift/gift-needed'}(page=${pageNo},size=${accounts.size})}">
                                     <span th:text="${pageNo + 1}"></span>
                                 </a>
 
                             </li>
                             <li th:class="${accounts.number + 1 ge accounts.totalPages} ? 'disabled' : ''">
-                                <a th:if="${not accounts.last}" th:href="@{${'/account/gift-needed'}(page=${accounts.number+1},size=${accounts.size})}" aria-label="Next"> <span aria-hidden="true"><i class="fa fa-angle-right"></i></span> </a>
+                                <a th:if="${not accounts.last}" th:href="@{${'/gift/gift-needed'}(page=${accounts.number+1},size=${accounts.size})}" aria-label="Next"> <span aria-hidden="true"><i class="fa fa-angle-right"></i></span> </a>
                                 <a th:if="${accounts.last}" href="javascript:void(0);" aria-label="Next"> <span aria-hidden="true"><i class="fa fa-angle-right"></i></span> </a>
                             </li>
                         </ul>

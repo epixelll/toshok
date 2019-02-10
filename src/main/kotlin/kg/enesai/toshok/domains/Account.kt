@@ -1,6 +1,8 @@
 package kg.enesai.toshok.domains
 
 import kg.enesai.toshok.enums.AccountStatus
+import org.hibernate.annotations.LazyCollection
+import org.hibernate.annotations.LazyCollectionOption
 import java.time.LocalDate
 import javax.persistence.*
 
@@ -20,6 +22,9 @@ class Account(
         @Column(name = "check_number")
         var checkNumber: String?,
 
+        @Column(name = "check_path")
+        var checkPath: String?,
+
         @Column(name = "passport_number")
         var passportNumber: String?,
 
@@ -38,17 +43,16 @@ class Account(
         var parent: Account?,
 
         @Column(name = "level")
-        var level: Int,
-
-        @Column(name = "gift_given_for_level")
-        var giftGivenForLevel: Int
-
+        var level: Int
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null
 
-
     @OneToMany(mappedBy = "parent")
     var children: List<Account> = mutableListOf()
+
+    @OneToMany(mappedBy = "account")
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    var gifts: List<Gift> = mutableListOf()
 }

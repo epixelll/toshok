@@ -25,7 +25,7 @@ class CommonController(
 
     @GetMapping("/dashboard")
     fun dashboard(authentication: Authentication, model: Model): String {
-        if (authentication.authorities.map { it.authority }.contains(Permission.APPROVE_ACCOUNT.toString())) return "redirect:/account/approve-list"
+        if (authentication.authorities.map { it.authority }.contains(Permission.ACCOUNT_APPROVE.toString())) return "redirect:/account/approve-list"
         if (authentication.authorities.map { it.authority }.contains(Permission.ACCOUNT_VIEW.toString())) return "redirect:/account/list"
 
         val principal = authentication.principal as User

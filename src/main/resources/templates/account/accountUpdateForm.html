@@ -34,8 +34,8 @@
                     <!--</a>-->
                 <!--</div>-->
                 <div class="row">
-                    <div class="col-md-4 center p-30 background-white b-r-6">
-                        <form action="#" th:action="@{/account/update}" th:object="${accountUpdateForm}" th:method="post" class="form-transparent-grey">
+                    <div class="col-md-4 center background-white ">
+                        <form action="#" th:action="@{/account/update}" th:object="${accountUpdateForm}" th:method="post" enctype="multipart/form-data" class="form-transparent-grey">
                             <div class="row">
                                 <div class="col-md-12">
                                     <h3>Каттоо</h3>
@@ -57,6 +57,10 @@
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Чектин Номуру</label>
                                     <input th:field="*{checkNumber}" type="text" value="" placeholder="Чектин Номуру" class="form-control input-lg">
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label class="sr-only">Чектин Суроту</label>
+                                    <input th:field="*{checkPhoto}" type="file" value="" placeholder="Чектин Суроту" class="form-control input-lg">
                                 </div>
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Паспорт Номуру</label>
@@ -96,7 +100,7 @@
 
                                 <div class="col-md-12 form-group">
                                     <button id="submit_button" class="btn btn-default" type="submit">Сактоо</button>
-                                    <a th:href="@{/registration}" class="btn btn-danger m-l-10">Жокко чыгаруу</a>
+                                    <a th:href="@{/account/list}" class="btn btn-danger m-l-10">Жокко чыгаруу</a>
                                 </div>
                             </div>
                         </form>

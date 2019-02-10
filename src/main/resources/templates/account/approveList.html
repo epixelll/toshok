@@ -32,24 +32,35 @@
                             <thead>
                             <tr>
                                 <th>N:</th>
-                                <th>Статусу</th>
                                 <th>Аты жөнү</th>
-                                <th>Баскычы</th>
-                                <th>Тел номуру:</th>
+                                <th>Катталган күнү</th>
+                                <th>Чек но:</th>
+                                <th>Чек сурот:</th>
+                                <th>Телефон</th>
+                                <th>Кимге катталган</th>
                                 <th>Башкаруу</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr th:each="account, iter : ${accounts.content}">
                                 <td th:text="${iter.index + 1}">Number</td>
-                                <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).CREATED}">Кошулду</td>
-                                <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).PENDING}">Күтүп жатат</td>
-                                <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).APPROVED}">Тастыкталды</td>
                                 <td th:text="${account.fullname}">Fullname</td>
-                                <td th:text="${account.level}">Region</td>
+                                <td th:text="${#temporals.format(account.registeredDate, 'dd.MM.yyyy')}">date</td>
+                                <td th:text="${account.checkNumber}">Check Number</td>
+                                <td th:with="checkImage=${'<img src=''/' + account.checkPath + '''>'}">
+                                    <!--<img style="width: 50px" th:src="@{'/' + ${account.checkPath}}"/>-->
+                                    <!--<button data-toggle="popover" data-placement="top" title="" data-content="And here's some amazing content. It's very engaging. Right? <iframe src='https://player.vimeo.com/video/56962340?title=0&amp;byline=0&amp;portrait=0' width='500' height='281' frameborder='0'></iframe>" data-original-title="Popover title" aria-describedby="popover741320">Click to toggle popover</button>-->
+                                    <button th:if="${account.checkPath != null}" type="button" class="btn btn-sm btn-info" data-toggle="popover" data-placement="right" title="" th:data-content="${checkImage}" >Чек сүрөтү</button>
+                                </td>
                                 <td th:text="${account.phoneNumber}">Phone number</td>
+                                <td th:text="${account.parentName}">Parent name</td>
                                 <td>
-                                    <a type="button" class="btn btn-success" th:href="@{'/account/approve/' + ${account.id}}">
+                                    <button th:if="${account.parentStatus != null && account.parentStatus != 'APPROVED'}"
+                                            type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="" data-original-title="Байланган кишиси тастыктала элек"><i class="fa fa-info"></i></button>
+                                    <button th:if="${account.parentStatus != null and account.parentStatus == 'APPROVED' and account.approvedSiblingCount >= 4}"
+                                            type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="" data-original-title="Байланышкан кишисинде 4 кишиси толук."><i class="fa fa-info"></i></button>
+                                    <a th:if="${account.parentStatus == null or account.parentStatus == 'APPROVED' or account.approvedSiblingCount < 4}"
+                                            type="button" class="btn btn-success" th:href="@{'/account/approve/' + ${account.id}}">
                                         <i class="fa fa-check"></i>
                                     </a>
                                 </td>

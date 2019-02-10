@@ -1,9 +1,6 @@
 package kg.enesai.toshok.repositories
 
-import kg.enesai.toshok.domains.Account
-import kg.enesai.toshok.domains.Region
-import kg.enesai.toshok.domains.Role
-import kg.enesai.toshok.domains.User
+import kg.enesai.toshok.domains.*
 import kg.enesai.toshok.enums.AccountStatus
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -28,8 +25,10 @@ interface AccountRepository : JpaRepository<Account, Int> {
 
     fun findAllByStatus(status: AccountStatus, pageable: Pageable): Page<Account>
 
-    @Query(value ="SELECT a from Account a where a.level > a.giftGivenForLevel")
+    @Query(value ="SELECT a from Account a where a.level > (SELECT count(g) from Gift g where g.account = a) and a.status = 'APPROVED'")
     fun findAllGiftNeededAccounts(pageable: Pageable): Page<Account>
+
+    fun deleteByStatus(status: AccountStatus)
 }
 
 interface RoleRepository : JpaRepository<Role, Int> {
@@ -38,4 +37,8 @@ interface RoleRepository : JpaRepository<Role, Int> {
 
 interface UserRepository : JpaRepository<User, Int>{
     fun findByUsername(username: String): User?
+}
+
+interface GiftRepository: JpaRepository<Gift, Int>{
+    fun findAllByAccountId(accountId: Int): List<Gift>
 }

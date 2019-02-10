@@ -6,5 +6,7 @@ data class SubchildAccountDto(
         val id: Int,
         val fullname: String,
         val status: AccountStatus?,
-        val phoneNumber: String?
+        val phoneNumber: String?,
+        val giftsGiven: Int,
+        val parentName: String
 )

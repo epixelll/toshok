@@ -10,7 +10,6 @@ data class UserCreateForm(
         @field:NotBlank
         var password: String?,
 
-        @field:NotNull
         var roleId: Int?,
 
         var accountId: Int?

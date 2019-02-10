@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -45,23 +46,23 @@
                                 <input th:field="*{id}" type="hidden" >
 
                                 <div class="col-md-12 form-group">
-                                    <label class="sr-only">Колдонуучу аты/Тел номуру</label>
-                                    <input th:field="*{username}" type="text" value="" placeholder="Аты жөнү" class="form-control input-lg" th:required>
-                                    <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-red">Username can't be blank</span>
-                                </div>
-                                <div class="col-md-12 form-group">
-                                    <label class="sr-only">Роль</label>
-                                    <select th:field="*{roleId}">
-                                        <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
-                                    </select>
-                                    <span th:if="${#fields.hasErrors('roleId')}" th:errors="*{roleId}" class="text-red">Role should be selected</span>
-                                </div>
-                                <div class="col-md-12 form-group">
                                     <label class="sr-only">Кимдин колдонуучусу</label>
                                     <select th:field="*{accountId}">
                                         <option value="" selected>Кимдин колдонуучусу</option>
                                         <option th:each="account : ${accounts}" th:value="${account.id}" th:text="${account.fullname}"></option>
                                     </select>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <label class="sr-only">Колдонуучу аты/Тел номуру</label>
+                                    <input th:field="*{username}" type="text" value="" placeholder="Аты жөнү" class="form-control input-lg" th:required>
+                                    <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-red">Username can't be blank</span>
+                                </div>
+                                <div sec:authorize="hasAuthority('USER_UPDATE_ALL')" class="col-md-12 form-group">
+                                    <label class="sr-only">Роль</label>
+                                    <select th:field="*{roleId}">
+                                        <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+                                    </select>
+                                    <span th:if="${#fields.hasErrors('roleId')}" th:errors="*{roleId}" class="text-red">Role should be selected</span>
                                 </div>
 
                                 <div class="col-md-6 form-group">
@@ -98,13 +99,6 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     jQuery().ready(function(){
-        $(function() {
-            $("#datetimepicker1").datetimepicker({
-                locale: 'ru',
-                format: 'L',
-                defaultDate: new Date()
-            });
-        });
 
         $('#password, #confirm_password').on('keyup', function () {
             if ($('#password').val() == $('#confirm_password').val()) {

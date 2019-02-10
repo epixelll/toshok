@@ -3,18 +3,23 @@ package kg.enesai.toshok.services
 import kg.enesai.toshok.domains.Account
 import kg.enesai.toshok.dtos.*
 import kg.enesai.toshok.enums.AccountStatus
+import kg.enesai.toshok.enums.Permission
 import kg.enesai.toshok.repositories.AccountRepository
+import kg.enesai.toshok.services.endpoint.FileUploadEndpointService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.lang.IllegalStateException
+import java.time.LocalDate
 import javax.persistence.EntityNotFoundException
 
 @Service
 class DefaultAccountService(
         private val accountRepository: AccountRepository,
-        private val regionService: RegionService
+        private val regionService: RegionService,
+        private val fileUploadEndpointService: FileUploadEndpointService,
+        private val currentUserService: CurrentUserService
 ) : AccountService {
     @Transactional(readOnly = true)
     override fun findAll(): List<AccountDto> {
@@ -59,6 +64,37 @@ class DefaultAccountService(
     }
 
     @Transactional
+    override fun createFromExcel(account: Account): Account{
+        System.out.println("****CREATED: " + account.fullname + " id: " + account.id )
+        account.parent?.let{ parent ->
+            parent.takeIf { accountRepository.countByParentIdAndStatus(it.id!!, AccountStatus.APPROVED) >= 4}
+                    ?.let { account.parent = null }
+            updateParentLevels(parent)
+        }
+
+        return accountRepository.save(account)
+    }
+
+    @Transactional
+    override fun createTemporalAccount(name: String): Account {
+        val account = Account(
+                AccountStatus.TEMPORARY,
+                name,
+                null,
+                null,
+                null,
+                null,
+                null,
+                LocalDate.now(),
+                null,
+                null,
+                0
+        )
+
+        return accountRepository.save(account)
+    }
+
+    @Transactional
     override fun create(accountCreateForm: AccountCreateForm): Account{
         val account = formToAccount(accountCreateForm)
         account.parent?.let { parent ->
@@ -83,7 +119,10 @@ class DefaultAccountService(
 
     @Transactional
     override fun update(form: AccountUpdateForm): Account {
-        val account = formToAccount(form)
+        var account = get(form.id)
+        if(!currentUserService.currentUserHasPermission(Permission.ACCOUNT_UPDATE_APPROVED) && account.status == AccountStatus.APPROVED)
+            throw IllegalAccessException("You don't have permission to update Approved accounts")
+        account = formToAccount(account, form)
         account.parent?.let { updateParentLevels(it) }
         return accountRepository.save(account)
     }
@@ -91,6 +130,8 @@ class DefaultAccountService(
     @Transactional
     override fun delete(id: Int) {
         val account = accountRepository.findById(id).orElseThrow { EntityNotFoundException("""Account with id = $id not found""") }
+        if(!currentUserService.currentUserHasPermission(Permission.ACCOUNT_DELETE_APPROVED) && account.status == AccountStatus.APPROVED)
+            throw IllegalAccessException("You don't have permission to delete Approved accounts")
         accountRepository.removeChildsByParentId(id)
         account.parent?.let { updateParentLevels(it) }
         accountRepository.deleteById(id)
@@ -121,12 +162,12 @@ class DefaultAccountService(
         return level
     }
 
-    @Transactional
-    override fun giveGift(id: Int) {
-        val account = accountRepository.findById(id).orElseThrow { throw EntityNotFoundException("Entity with this id not found") }
-        account.giftGivenForLevel = account.giftGivenForLevel + 1
-        accountRepository.save(account)
-    }
+//    @Transactional
+//    override fun giveGift(id: Int) {
+//        val account = accountRepository.findById(id).orElseThrow { throw EntityNotFoundException("Entity with this id not found") }
+//        account.giftGivenForLevel = account.giftGivenForLevel + 1
+//        accountRepository.save(account)
+//    }
 
     @Transactional(readOnly = true)
     override fun findById(id: Int) = accountRepository.findById(id).orElseThrow { EntityNotFoundException("Account with id = $id not found") }!!
@@ -136,6 +177,9 @@ class DefaultAccountService(
         val account = findById(id)
         return mapToAccountInfo(account)
     }
+
+    @Transactional
+    override fun deleteTemporary() = accountRepository.deleteByStatus(AccountStatus.TEMPORARY)
 
     private fun updateParentLevels(parent: Account) {
         parent.level = getLevel(parent)
@@ -150,9 +194,16 @@ class DefaultAccountService(
                     child.fullname,
                     child.status,
                     child.phoneNumber,
-                    child.children.map {SubchildAccountDto(it.id!!, it.fullname, it.status, it.phoneNumber)},
-                    child.children.flatMap{it.children.map { SubchildAccountDto(it.id!!, it.fullname, it.status, it.phoneNumber) }},
-                    child.children.flatMap{it.children.flatMap { it.children.map { SubchildAccountDto(it.id!!, it.fullname, it.status, it.phoneNumber)}}}
+                    child.gifts.size,
+                    child.children.filter { it.status == AccountStatus.APPROVED }
+                            .map {SubchildAccountDto(it.id!!, it.fullname, it.status, it.phoneNumber, it.gifts.size, it.parent!!.fullname)},
+                    child.children.filter { it.status == AccountStatus.APPROVED }
+                            .flatMap{it.children.filter { it.status == AccountStatus.APPROVED }
+                                    .map { SubchildAccountDto(it.id!!, it.fullname, it.status, it.phoneNumber, it.gifts.size, it.parent!!.fullname) }},
+                    child.children.filter { it.status == AccountStatus.APPROVED }
+                            .flatMap{it.children.filter { it.status == AccountStatus.APPROVED }
+                                    .flatMap { it.children.filter { it.status == AccountStatus.APPROVED }
+                                            .map { SubchildAccountDto(it.id!!, it.fullname, it.status, it.phoneNumber, it.gifts.size, it.parent!!.fullname)}}}
             )
         }
         return AccountInfo(
@@ -160,6 +211,7 @@ class DefaultAccountService(
                 account.status,
                 account.fullname,
                 account.checkNumber,
+                account.checkPath,
                 account.level,
                 account.phoneNumber,
                 account.parent?.fullname,
@@ -168,9 +220,10 @@ class DefaultAccountService(
         )
     }
 
-    private fun formToAccount(form: AccountUpdateForm): Account {
-        val account = get(form.id)
-        account.status = form.checkNumber?.let { AccountStatus.PENDING } ?: AccountStatus.CREATED
+    private fun formToAccount(account: Account, form: AccountUpdateForm): Account {
+        var status = account.status
+        if (status != AccountStatus.APPROVED) status = form.checkNumber?.let { AccountStatus.PENDING } ?: AccountStatus.CREATED
+        account.status = status
         account.fullname = form.fullname!!
         account.checkNumber = form.checkNumber
         account.passportNumber = form.passportNumber
@@ -183,18 +236,20 @@ class DefaultAccountService(
     }
 
     private fun formToAccount(createForm: AccountCreateForm): Account {
+        val photoPath = createForm.checkPhoto?.let { fileUploadEndpointService.saveUploadedFile(it) }
+        val status = if(photoPath == null && (createForm.checkNumber == null || createForm.checkNumber!!.isBlank())) AccountStatus.CREATED else AccountStatus.PENDING
         return Account(
-                createForm.checkNumber?.let { AccountStatus.PENDING } ?: AccountStatus.CREATED,
+                status,
                 createForm.fullname!!,
                 createForm.address!!,
                 createForm.checkNumber,
+                photoPath,
                 createForm.passportNumber,
                 createForm.phoneNumber,
                 createForm.registeredDate,
                 createForm.regionId?.let { regionService.get(it) },
                 createForm.parentId?.let { this.get(it) },
-                1,
-                0
+                1
         )
     }
 }

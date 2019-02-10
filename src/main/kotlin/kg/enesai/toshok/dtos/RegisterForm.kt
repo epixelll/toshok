@@ -1,5 +1,6 @@
 package kg.enesai.toshok.dtos
 
+import org.springframework.web.multipart.MultipartFile
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
@@ -12,6 +13,8 @@ data class RegisterForm(
         var address: String?,
 
         var checkNumber: String?,
+
+        var checkPhoto: MultipartFile?,
 
         @field:NotBlank
         var passportNumber: String?,

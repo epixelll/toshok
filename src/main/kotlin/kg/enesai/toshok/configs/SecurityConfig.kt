@@ -12,9 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.multipart.support.MultipartFilter
 import javax.servlet.ServletContext
 
-
-
-
 @EnableWebSecurity
 class SecurityConfig(
         private val userDetailsService: CustomUserDetailsService
@@ -29,8 +26,12 @@ class SecurityConfig(
         http
                 .csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/lib/**").permitAll()
+                    .antMatchers("/css/**", "/checks/**", "/js/**", "/images/**", "/fonts/**", "/lib/**").permitAll()
                     .antMatchers("/", "/home", "/welcome", "/login", "/registration/**", "/registration/upload-csv").permitAll()
+                    .antMatchers("/account/list").hasAuthority("ACCOUNT_VIEW")
+                    .antMatchers("/account/approve").hasAuthority("ACCOUNT_APPROVE")
+                    .antMatchers("/user/list").hasAuthority("USER_VIEW")
+                    .antMatchers("/account/gift-needed").hasAuthority("GIFT_VIEW")
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()

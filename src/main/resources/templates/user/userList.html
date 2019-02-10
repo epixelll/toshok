@@ -50,10 +50,12 @@
                                 <td th:if="${user.roleName == 'MEMBER'}">Жөнөкөй колдонуучу</td>
                                 <td th:text="${user.accountFullname}">Account Name</td>
                                 <td>
-                                    <a type="button" class="btn btn-light" th:href="@{'/user/getUserUpdateForm/' + ${user.id}}">
+                                    <a th:if="${#authorization.expression('hasAuthority(''USER_UPDATE_ALL'')') OR user.roleName == 'MEMBER'}"
+                                       type="button" class="btn btn-light" th:href="@{'/user/getUserUpdateForm/' + ${user.id}}">
                                         <i class="fa fa-cog"></i>
                                     </a>
-                                    <a type="button" class="btn btn-red" th:href="@{'/user/delete/' + ${user.id}}">
+                                    <a th:if="${#authorization.expression('hasAuthority(''USER_DELETE_ALL'')') OR user.roleName == 'MEMBER'}"
+                                       type="button" class="btn btn-red" th:href="@{'/user/delete/' + ${user.id}}">
                                         <i class="fa fa-trash"></i>
                                     </a>
                                 </td>

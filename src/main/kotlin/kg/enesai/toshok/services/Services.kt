@@ -5,6 +5,7 @@ import kg.enesai.toshok.domains.Region
 import kg.enesai.toshok.domains.Role
 import kg.enesai.toshok.domains.User
 import kg.enesai.toshok.dtos.*
+import kg.enesai.toshok.enums.Permission
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
@@ -19,6 +20,7 @@ interface AccountService {
     fun findAll(pageable: Pageable): Page<AccountDto>
     fun get(id: Int): Account
     fun create(account: Account): Account
+    fun createFromExcel(account: Account): Account
     fun create(accountCreateForm: AccountCreateForm): Account
     fun update(form: AccountUpdateForm): Account
     fun delete(id: Int)
@@ -31,7 +33,9 @@ interface AccountService {
     fun findById(id: Int): Account
     fun getAccountInfo(id: Int): AccountInfo
     fun findAllGiftNeededAccounts(pageable: Pageable): Page<AccountDto>
-    fun giveGift(id: Int)
+    fun createTemporalAccount(name: String): Account
+    fun deleteTemporary()
+//    fun giveGift(id: Int)
 }
 
 interface RoleService {
@@ -50,4 +54,14 @@ interface UserService {
     fun delete(id: Int)
     fun getProfile(): ProfileDto
     fun changePassword(changePasswordForm: ChangePasswordForm)
+}
+
+interface CurrentUserService {
+    fun getCurrentUser(): User
+    fun currentUserHasPermission(permission: Permission): Boolean
+}
+
+interface GiftService {
+    fun findAllByAccountId(accountId: Int): List<GiftDto>
+    fun create(giftCreateForm: GiftCreateForm)
 }

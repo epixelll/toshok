@@ -19,13 +19,21 @@ create table accounts(
   fullname VARCHAR(150) NOT NULL,
   address VARCHAR(150),
   check_number VARCHAR,
+  check_path VARCHAR,
   passport_number VARCHAR(150),
   phone_number VARCHAR(30),
   registered_date DATE,
   region_id BIGINT REFERENCES regions,
   parent_id BIGINT REFERENCES accounts,
-  level INT NOT NULL default 1,
-  gift_given_for_level INT NOT NULL default 0
+  level INT NOT NULL default 1
+);
+
+create table gifts(
+  id SERIAL PRIMARY KEY,
+  account_id INT NOT NULL REFERENCES accounts,
+  name VARCHAR NOT NULL,
+  description VARCHAR,
+  given_date DATE
 );
 
 create table users(

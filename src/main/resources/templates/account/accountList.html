@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 
 <head th:include="fragments/header :: headerFragment">
@@ -18,9 +19,9 @@
     <section class="p-t-20">
         <div class="container">
 
-            <div class="row">
-                <a th:href="@{/account/getAccountCreateForm}" class="btn btn-rounded float-right">Жаны</a>
-            </div>
+            <!--<div class="row">-->
+                <!--<a th:href="@{/account/getAccountCreateForm}" class="btn btn-rounded float-right">Жаны</a>-->
+            <!--</div>-->
 
             <!--Panel with tables-->
             <!--<div class="hr-title hr-long center"><abbr>Катталгандар</abbr>-->
@@ -46,9 +47,10 @@
                             <tbody>
                             <tr th:each="account, iter : ${accounts.content}">
                                 <td th:text="${iter.index + 1}">Number</td>
-                                <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).CREATED}">Кошулду</td>
+                                <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).CREATED}">Чек жок</td>
                                 <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).PENDING}">Күтүп жатат</td>
                                 <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).APPROVED}">Тастыкталды</td>
+                                <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).TEMPORARY}">Катаа катталган</td>
                                 <td th:text="${account.fullname}">Fullname</td>
                                 <td th:text="${account.level}">Region</td>
                                 <td th:text="${account.phoneNumber}">Phone number</td>
@@ -56,10 +58,12 @@
                                     <a type="button" class="btn btn-info" th:href="@{'/account/info/' + ${account.id}}">
                                         <i class="fa fa-info"></i>
                                     </a>
-                                    <a type="button" class="btn btn-light" th:href="@{'/account/getAccountUpdateForm/' + ${account.id}}">
+                                    <a th:if="${#authorization.expression('hasRole(''ACCOUNT_UPDATE_APPROVED'')') or account.status != T(kg.enesai.toshok.enums.AccountStatus).APPROVED}"
+                                            type="button" class="btn btn-light" th:href="@{'/account/getAccountUpdateForm/' + ${account.id}}">
                                         <i class="fa fa-cog"></i>
                                     </a>
-                                    <a type="button" class="btn btn-red" th:href="@{'/account/delete/' + ${account.id}}">
+                                    <a th:if="${#authorization.expression('hasRole(''ACCOUNT_DELETE_APPROVED'')') or account.status != T(kg.enesai.toshok.enums.AccountStatus).APPROVED}"
+                                       type="button" class="btn btn-red" th:href="@{'/account/delete/' + ${account.id}}">
                                         <i class="fa fa-trash"></i>
                                     </a>
                                 </td>
@@ -67,30 +71,6 @@
                             </tbody>
                         </table>
 
-
-
-                        <!--<nav class="text-center">-->
-                            <!--<ul class="pagination">-->
-                                <!--<li th:class="${contactsPage.number eq 0} ? 'disabled' : ''">-->
-                                    <!--<a th:if="${not contactsPage.firstPage}" th:href="@{${'/contacts'}(page=${contactsPage.number-1},size=${contactsPage.size})}">Previous</a>-->
-                                    <!--<a th:if="${contactsPage.firstPage}" href="javascript:void(0);">Previous</a>-->
-                                <!--</li>-->
-
-                                <!--<li th:each="pageNo : ${#numbers.sequence(0, contactsPage.totalPages - 1)}" th:class="${contactsPage.number eq pageNo}? 'active' : ''">-->
-                                    <!--<a th:if="${contactsPage.number  eq pageNo}" href="javascript:void(0);">-->
-                                        <!--<span th:text="${pageNo + 1}"></span>-->
-                                    <!--</a>-->
-                                    <!--<a th:if="${not (contactsPage.number  eq pageNo)}" th:href="@{${'/contacts'}(page=${pageNo},size=${contactsPage.size})}">-->
-                                        <!--<span th:text="${pageNo + 1}"></span>-->
-                                    <!--</a>-->
-
-                                <!--</li>-->
-                                <!--<li th:class="${contactsPage.number + 1 ge contactsPage.totalPages} ? 'disabled' : ''">-->
-                                    <!--<a th:if="${not contactsPage.lastPage}" th:href="@{${'/contacts'}(page=${contactsPage.number+1},size=${contactsPage.size})}">Next</a>-->
-                                    <!--<a th:if="${contactsPage.lastPage}" href="javascript:void(0);">Next</a>-->
-                                <!--</li>-->
-                            <!--</ul>-->
-                        <!--</nav>-->
                     </div>
                     <nav class="text-center m-t-5">
                         <ul class="pagination">
@@ -119,7 +99,6 @@
             </div>
             <!--END: Panel with tables-->
             <hr class="space">
-
 
         </div>
     </section>

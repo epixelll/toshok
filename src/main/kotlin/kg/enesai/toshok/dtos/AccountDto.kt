@@ -2,16 +2,21 @@ package kg.enesai.toshok.dtos
 
 import kg.enesai.toshok.domains.Account
 import kg.enesai.toshok.enums.AccountStatus
+import java.time.LocalDate
 
 data class AccountDto(
         val id: Int,
         val status: AccountStatus,
         val fullname: String,
         val checkNumber: String?,
+        val checkPath: String?,
         val level: Int,
         val giftsGiven: Int,
         val parentName: String?,
-        val phoneNumber: String?
+        val parentStatus: AccountStatus?,
+        val approvedSiblingCount: Int,
+        val phoneNumber: String?,
+        val registeredDate: LocalDate?
 ) {
     companion object {
         fun of(account: Account) = AccountDto(
@@ -19,10 +24,14 @@ data class AccountDto(
                 account.status,
                 account.fullname,
                 account.checkNumber,
+                account.checkPath,
                 account.level,
-                account.giftGivenForLevel,
+                account.gifts.size,
                 account.parent?.fullname,
-                account.phoneNumber
+                account.parent?.status,
+                account.parent?.children?.filter { it.status == AccountStatus.APPROVED }?.size ?: 0,
+                account.phoneNumber,
+                account.registeredDate
         )
     }
 }
