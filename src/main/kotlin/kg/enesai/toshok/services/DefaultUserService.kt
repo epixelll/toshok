@@ -5,6 +5,7 @@ import kg.enesai.toshok.domains.User
 import kg.enesai.toshok.dtos.*
 import kg.enesai.toshok.enums.Permission
 import kg.enesai.toshok.repositories.UserRepository
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -36,7 +37,7 @@ class DefaultUserService(
     }
 
     @Transactional(readOnly = true)
-    override fun findAll(pageable: Pageable) = userRepository.findAll(pageable).map { UserDto.of(it) }
+    override fun findAllByUsername(username: String, pageable: Pageable) = userRepository.findAllByUsernameIgnoreCaseContaining(username, pageable).map { UserDto.of(it) }
 
     @Transactional(readOnly = true)
     override fun getUpdateForm(id: Int): UserUpdateForm {

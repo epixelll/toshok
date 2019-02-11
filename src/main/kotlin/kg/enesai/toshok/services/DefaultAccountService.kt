@@ -27,18 +27,23 @@ class DefaultAccountService(
     }
 
     @Transactional(readOnly = true)
-    override fun findAll(pageable: Pageable): Page<AccountDto> {
-        return accountRepository.findAll(pageable).map { AccountDto.of(it) }
+    override fun findAll(accountSearchDto: AccountSearchDto, pageable: Pageable): Page<AccountDto> {
+        val accounts: Page<Account> = if(accountSearchDto.status != null && accountSearchDto.level != null)
+            accountRepository.findAllByFullnameIgnoreCaseContainingAndStatusAndLevel(accountSearchDto.fullname!!, accountSearchDto.status!!, accountSearchDto.level!!, pageable)
+        else if(accountSearchDto.status != null) accountRepository.findAllByFullnameIgnoreCaseContainingAndStatus(accountSearchDto.fullname!!, accountSearchDto.status!!, pageable)
+        else if(accountSearchDto.level != null) accountRepository.findAllByFullnameIgnoreCaseContainingAndLevel(accountSearchDto.fullname!!, accountSearchDto.level!!, pageable)
+        else accountRepository.findAllByFullnameIgnoreCaseContaining(accountSearchDto.fullname!!, pageable)
+        return accounts.map { AccountDto.of(it) }
     }
 
     @Transactional(readOnly = true)
-    override fun findAllGiftNeededAccounts(pageable: Pageable): Page<AccountDto> {
-        return accountRepository.findAllGiftNeededAccounts(pageable).map { AccountDto.of(it) }
+    override fun findAllGiftNeededAccounts(fullname: String, pageable: Pageable): Page<AccountDto> {
+        return accountRepository.findAllGiftNeededAccounts(fullname.toLowerCase(), pageable).map { AccountDto.of(it) }
     }
 
     @Transactional(readOnly = true)
-    override fun findAllPending(pageable: Pageable): Page<AccountDto> {
-        return accountRepository.findAllByStatus(AccountStatus.PENDING, pageable).map { AccountDto.of(it) }
+    override fun findAllPending(fullname: String, pageable: Pageable): Page<AccountDto> {
+        return accountRepository.findAllByFullnameIgnoreCaseContainingAndStatus(fullname, AccountStatus.PENDING, pageable).map { AccountDto.of(it) }
     }
 
     @Transactional(readOnly = true)

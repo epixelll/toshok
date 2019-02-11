@@ -1,12 +1,14 @@
 package kg.enesai.toshok.controllers
 
-import kg.enesai.toshok.dtos.AccountCreateForm
+import kg.enesai.toshok.dtos.AccountSearchDto
 import kg.enesai.toshok.dtos.AccountUpdateForm
+import kg.enesai.toshok.enums.AccountStatus
 import kg.enesai.toshok.enums.Permission
 import kg.enesai.toshok.services.AccountService
 import kg.enesai.toshok.services.GiftService
 import kg.enesai.toshok.services.RegionService
 import kg.enesai.toshok.services.UserService
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.User
@@ -25,8 +27,9 @@ class AccountController(
         private val giftService: GiftService
 ) {
     @GetMapping("/list")
-    fun getAccountList(pageable: Pageable, model: Model): String {
-        model.addAttribute("accounts", accountService.findAll(pageable))
+    fun getAccountList(@ModelAttribute("accountSearchDto") accountSearchDto: AccountSearchDto, pageable: Pageable, model: Model): String {
+        model.addAttribute("accounts", accountService.findAll(accountSearchDto, pageable))
+        model.addAttribute("statuses", AccountStatus.values())
         return "account/accountList"
     }
 
@@ -54,7 +57,8 @@ class AccountController(
     fun getAccountUpdateForm(@PathVariable id: Int, model: Model): String {
         model.addAttribute("accountUpdateForm", accountService.getUpdateForm(id))
         model.addAttribute("regions", regionService.findAll())
-        model.addAttribute("accounts", accountService.findAll())
+        val accountSearchDto = AccountSearchDto("", null, null)
+        model.addAttribute("accounts", accountService.findAll(accountSearchDto, PageRequest.of(0, 20)))
         return "account/accountUpdateForm"
     }
 
@@ -73,7 +77,8 @@ class AccountController(
     fun update(@Valid @ModelAttribute("accountUpdateForm") accountUpdateForm: AccountUpdateForm, bindingResult: BindingResult, model: Model): String {
         if(bindingResult.hasErrors()){
             model.addAttribute("regions", regionService.findAll())
-            model.addAttribute("accounts", accountService.findAll())
+            val accountSearchDto = AccountSearchDto("", null, null)
+            model.addAttribute("accounts", accountService.findAll(accountSearchDto, PageRequest.of(0, 20)))
             return "account/accountUpdateForm"
         }
         accountService.update(accountUpdateForm)
@@ -87,8 +92,8 @@ class AccountController(
     }
 
     @GetMapping("/approve-list")
-    fun getApproveList(pageable: Pageable, model: Model): String {
-        model.addAttribute("accounts", accountService.findAllPending(pageable))
+    fun getApproveList(@ModelAttribute("accountSearchDto") accountSearchDto: AccountSearchDto, pageable: Pageable, model: Model): String {
+        model.addAttribute("accounts", accountService.findAllPending(accountSearchDto.fullname!!, pageable))
         return "account/approveList"
     }
 

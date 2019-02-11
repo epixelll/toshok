@@ -23,12 +23,14 @@ interface AccountRepository : JpaRepository<Account, Int> {
     @Query("update Account set parent.id = null where parent.id = :id")
     fun removeChildsByParentId(@Param("id") id: Int)
 
-    fun findAllByStatus(status: AccountStatus, pageable: Pageable): Page<Account>
-
-    @Query(value ="SELECT a from Account a where a.level > (SELECT count(g) from Gift g where g.account = a) and a.status = 'APPROVED'")
-    fun findAllGiftNeededAccounts(pageable: Pageable): Page<Account>
+    @Query(value ="SELECT a from Account a where lower(a.fullname) like concat('%', :fullname, '%') and a.level > (SELECT count(g) from Gift g where g.account = a) and a.status = 'APPROVED'")
+    fun findAllGiftNeededAccounts(@Param("fullname") fullname: String, pageable: Pageable): Page<Account>
 
     fun deleteByStatus(status: AccountStatus)
+    fun findAllByFullnameIgnoreCaseContainingAndStatusAndLevel(fullname: String, status: AccountStatus, level: Int, pageable: Pageable): Page<Account>
+    fun findAllByFullnameIgnoreCaseContainingAndStatus(fullname: String, status: AccountStatus, pageable: Pageable): Page<Account>
+    fun findAllByFullnameIgnoreCaseContainingAndLevel(fullname: String, level: Int, pageable: Pageable): Page<Account>
+    fun findAllByFullnameIgnoreCaseContaining(fullname: String, pageable: Pageable): Page<Account>
 }
 
 interface RoleRepository : JpaRepository<Role, Int> {
@@ -37,6 +39,7 @@ interface RoleRepository : JpaRepository<Role, Int> {
 
 interface UserRepository : JpaRepository<User, Int>{
     fun findByUsername(username: String): User?
+    fun findAllByUsernameIgnoreCaseContaining(username: String, pageable: Pageable): Page<User>
 }
 
 interface GiftRepository: JpaRepository<Gift, Int>{

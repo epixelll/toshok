@@ -26,7 +26,17 @@
             <!--<div class="hr-title hr-long center"><abbr>Катталгандар</abbr>-->
             <!--</div>-->
             <div class="row">
-
+                <div class="col-md-12">
+                    <form id="searchForm" action="#" th:action="@{/user/list}" method="get" class="form-inline text-center" _lpchecked="1">
+                        <div class="form-group col-md-3">
+                            <label class="sr-only">Колдонуучу аты</label>
+                            <input name="username" th:value="${username}" type="text" placeholder="Колдонуучу аты" class="form-control">
+                        </div>
+                        <input id="size" type="hidden" name="size" th:value="${users.size}">
+                        <input id="page" type="hidden" name="page" th:value="${users.number}">
+                        <button class="btn btn-default" type="submit">Издөө</button>
+                    </form>
+                </div>
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -63,27 +73,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <nav class="text-center m-t-5">
-                        <ul class="pagination">
-                            <li th:class="${users.number eq 0} ? 'disabled' : ''">
-                                <a th:if="${not users.first}" th:href="@{${'/user/list'}(page=${users.number-1},size=${users.size})}" aria-label="Previous"> <span aria-hidden="true"><i class="fa fa-angle-left"></i></span> </a>
-                                <a th:if="${users.first}" href="javascript:void(0);" aria-label="Previous"> <span aria-hidden="true"><i class="fa fa-angle-left"></i></span> </a>
-                            </li>
-                            <li th:each="pageNo : ${#numbers.sequence(0, users.totalPages - 1)}" th:class="${users.number eq pageNo}? 'active' : ''">
-                                <a th:if="${users.number  eq pageNo}" href="javascript:void(0);">
-                                    <span th:text="${pageNo + 1}"></span>
-                                </a>
-                                <a th:if="${not (users.number  eq pageNo)}" th:href="@{${'/user/list'}(page=${pageNo},size=${users.size})}">
-                                    <span th:text="${pageNo + 1}"></span>
-                                </a>
-
-                            </li>
-                            <li th:class="${users.number + 1 ge users.totalPages} ? 'disabled' : ''">
-                                <a th:if="${not users.last}" th:href="@{${'/user/list'}(page=${users.number+1},size=${users.size})}" aria-label="Next"> <span aria-hidden="true"><i class="fa fa-angle-right"></i></span> </a>
-                                <a th:if="${users.last}" href="javascript:void(0);" aria-label="Next"> <span aria-hidden="true"><i class="fa fa-angle-right"></i></span> </a>
-                            </li>
-                        </ul>
-                    </nav>
+                    <div th:with="pglst=${users}" th:insert="fragments/search-and-page::pagination"></div>
                 </div>
 
 
@@ -105,6 +95,8 @@
 
 <!--Plugins-->
 <div th:replace="fragments/footer :: scripts"></div>
+
+<div th:insert="fragments/search-and-page::script"></div>
 
 </body>
 </html>

@@ -22,7 +22,17 @@
             <!--<div class="hr-title hr-long center"><abbr>Катталгандар</abbr>-->
             <!--</div>-->
             <div class="row">
-
+                <div class="col-md-12">
+                    <form id="searchForm" action="#" th:action="@{/gift/gift-needed}" th:object="${accountSearchDto}" method="get" class="form-inline text-center" _lpchecked="1">
+                        <div class="form-group col-md-3">
+                            <label class="sr-only">Аты жөнү</label>
+                            <input th:field="*{fullname}" type="text" placeholder="Аты жөнү" class="form-control">
+                        </div>
+                        <input id="size" type="hidden" name="size" th:value="${accounts.size}">
+                        <input id="page" type="hidden" name="page" th:value="${accounts.number}">
+                        <button class="btn btn-default" type="submit">Издөө</button>
+                    </form>
+                </div>
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -32,8 +42,8 @@
                             <thead>
                             <tr>
                                 <th>N:</th>
-                                <th>Статусу</th>
                                 <th>Аты жөнү</th>
+                                <th>Катталган күнү</th>
                                 <th>Тел номуру:</th>
                                 <th>Баскычы</th>
                                 <th>Белектери</th>
@@ -43,10 +53,8 @@
                             <tbody>
                             <tr th:each="account, iter : ${accounts.content}">
                                 <td th:text="${iter.index + 1}">Number</td>
-                                <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).CREATED}">Чек жок</td>
-                                <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).PENDING}">Күтүп жатат</td>
-                                <td th:if="${account.status == T(kg.enesai.toshok.enums.AccountStatus).APPROVED}">Тастыкталды</td>
                                 <td th:text="${account.fullname}">Fullname</td>
+                                <td th:text="${#temporals.format(account.registeredDate, 'dd.MM.yyyy')}">date</td>
                                 <td th:text="${account.phoneNumber}">Phone number</td>
                                 <td th:text="${account.level}">level</td>
                                 <td th:text="${account.giftsGiven}">Gifts given</td>
@@ -63,27 +71,7 @@
                         </table>
 
                     </div>
-                    <nav class="text-center m-t-5">
-                        <ul class="pagination">
-                            <li th:class="${accounts.number eq 0} ? 'disabled' : ''">
-                                <a th:if="${not accounts.first}" th:href="@{${'/gift/gift-needed'}(page=${accounts.number-1},size=${accounts.size})}" aria-label="Previous"> <span aria-hidden="true"><i class="fa fa-angle-left"></i></span> </a>
-                                <a th:if="${accounts.first}" href="javascript:void(0);" aria-label="Previous"> <span aria-hidden="true"><i class="fa fa-angle-left"></i></span> </a>
-                            </li>
-                            <li th:each="pageNo : ${#numbers.sequence(0, accounts.totalPages - 1)}" th:class="${accounts.number eq pageNo}? 'active' : ''">
-                                <a th:if="${accounts.number  eq pageNo}" href="javascript:void(0);">
-                                    <span th:text="${pageNo + 1}"></span>
-                                </a>
-                                <a th:if="${not (accounts.number  eq pageNo)}" th:href="@{${'/gift/gift-needed'}(page=${pageNo},size=${accounts.size})}">
-                                    <span th:text="${pageNo + 1}"></span>
-                                </a>
-
-                            </li>
-                            <li th:class="${accounts.number + 1 ge accounts.totalPages} ? 'disabled' : ''">
-                                <a th:if="${not accounts.last}" th:href="@{${'/gift/gift-needed'}(page=${accounts.number+1},size=${accounts.size})}" aria-label="Next"> <span aria-hidden="true"><i class="fa fa-angle-right"></i></span> </a>
-                                <a th:if="${accounts.last}" href="javascript:void(0);" aria-label="Next"> <span aria-hidden="true"><i class="fa fa-angle-right"></i></span> </a>
-                            </li>
-                        </ul>
-                    </nav>
+                    <div th:with="pglst=${accounts}" th:insert="fragments/search-and-page::pagination"></div>
                 </div>
 
 
@@ -105,6 +93,7 @@
 
 <!--Plugins-->
 <div th:replace="fragments/footer :: scripts"></div>
+<div th:insert="fragments/search-and-page::script"></div>
 
 </body>
 </html>

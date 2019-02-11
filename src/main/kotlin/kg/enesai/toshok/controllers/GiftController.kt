@@ -1,5 +1,6 @@
 package kg.enesai.toshok.controllers
 
+import kg.enesai.toshok.dtos.AccountSearchDto
 import kg.enesai.toshok.dtos.GiftCreateForm
 import kg.enesai.toshok.services.AccountService
 import kg.enesai.toshok.services.GiftService
@@ -17,8 +18,8 @@ class GiftController(
         private val giftService: GiftService
 ) {
     @GetMapping("/gift-needed")
-    fun getGiftNeeded(pageable: Pageable, model: Model): String {
-        model.addAttribute("accounts", accountService.findAllGiftNeededAccounts(pageable))
+    fun getGiftNeeded(@ModelAttribute("accountSearchDto") accountSearchDto: AccountSearchDto, pageable: Pageable, model: Model): String {
+        model.addAttribute("accounts", accountService.findAllGiftNeededAccounts(accountSearchDto.fullname!!, pageable))
         return "gift/giftNeededAccountList"
     }
 

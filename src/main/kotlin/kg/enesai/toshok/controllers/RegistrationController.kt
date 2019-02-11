@@ -1,9 +1,11 @@
 package kg.enesai.toshok.controllers
 
+import kg.enesai.toshok.dtos.AccountSearchDto
 import kg.enesai.toshok.dtos.RegisterForm
 import kg.enesai.toshok.services.AccountService
 import kg.enesai.toshok.services.RegionService
 import kg.enesai.toshok.services.endpoint.RegistrationEndpointService
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
@@ -21,7 +23,8 @@ class RegistrationController(
     @GetMapping
     fun getRegister(@ModelAttribute("registerForm") registerForm: RegisterForm, model: Model): String {
         model.addAttribute("regions", regionService.findAll())
-        model.addAttribute("accounts", accountService.findAll())
+        val accountSearchDto = AccountSearchDto("", null, null)
+        model.addAttribute("accounts", accountService.findAll(accountSearchDto, PageRequest.of(0, 20)))
         return "register"
     }
 
@@ -29,7 +32,8 @@ class RegistrationController(
     fun create(@Valid @ModelAttribute("registerForm") registerForm: RegisterForm, bindingResult: BindingResult, model: Model): String {
         if(bindingResult.hasErrors()){
             model.addAttribute("regions", regionService.findAll())
-            model.addAttribute("accounts", accountService.findAll())
+            val accountSearchDto = AccountSearchDto("", null, null)
+            model.addAttribute("accounts", accountService.findAll(accountSearchDto, PageRequest.of(0, 20)))
             return "register"
         }
         registrationEndpoint.register(registerForm)

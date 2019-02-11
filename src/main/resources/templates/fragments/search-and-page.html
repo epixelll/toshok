@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<nav th:fragment="pagination" class="text-center m-t-5">
+    <ul class="pagination">
+        <li th:class="${pglst.number eq 0} ? 'disabled' : ''">
+            <a th:if="${not pglst.first}" th:onclick="'setPaginationAndCallSearch(' + ${pglst.number-1} +', ' + ${pglst.size} + ')'" aria-label="Previous"> <span aria-hidden="true"><i class="fa fa-angle-left"></i></span> </a>
+            <a th:if="${pglst.first}" href="javascript:void(0);" aria-label="Previous"> <span aria-hidden="true"><i class="fa fa-angle-left"></i></span> </a>
+        </li>
+        <li th:each="pageNo : ${#numbers.sequence(0, pglst.totalPages - 1)}" th:class="${pglst.number eq pageNo}? 'active' : ''" th:if="${pageNo != -1}">
+            <a th:if="${pglst.number eq pageNo}" href="javascript:void(0);">
+                <span th:text="${pageNo + 1}"></span>
+            </a>
+            <a th:if="${pglst.number ne pageNo and ((pageNo gt pglst.number-5 and pageNo lt pglst.number+5) or (pageNo eq 0 or pageNo eq pglst.totalPages-1))}" th:onclick="'setPaginationAndCallSearch(' + ${pageNo} +', ' + ${pglst.size} + ')'">
+                <span th:text="${pageNo + 1}"></span>
+            </a>
+        </li>
+        <li th:class="${pglst.number + 1 ge pglst.totalPages} ? 'disabled' : ''">
+            <a th:if="${not pglst.last}" th:onclick="'setPaginationAndCallSearch(' + ${pglst.number+1} +', ' + ${pglst.size} + ')'" aria-label="Next"> <span aria-hidden="true"><i class="fa fa-angle-right"></i></span> </a>
+            <a th:if="${pglst.last}" href="javascript:void(0);" aria-label="Next"> <span aria-hidden="true"><i class="fa fa-angle-right"></i></span> </a>
+        </li>
+    </ul>
+</nav>
+
+<div th:fragment="script">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var setPaginationAndCallSearch = function(page, size) {
+            $("#size").val(size);
+            $("#page").val(page);
+            $("#searchForm").submit();
+        }
+        /*]]>*/
+    </script>
+</div>
+
+</body>
+
+</html>

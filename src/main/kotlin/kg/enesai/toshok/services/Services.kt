@@ -17,7 +17,7 @@ interface RegionService {
 
 interface AccountService {
     fun findAll(): List<AccountDto>
-    fun findAll(pageable: Pageable): Page<AccountDto>
+    fun findAll(accountSearchDto: AccountSearchDto, pageable: Pageable): Page<AccountDto>
     fun get(id: Int): Account
     fun create(account: Account): Account
     fun createFromExcel(account: Account): Account
@@ -27,12 +27,12 @@ interface AccountService {
     fun getUpdateForm(id: Int): AccountUpdateForm
     fun findByFullname(fullname: String?): Account?
     fun getLevel(account: Account): Int
-    fun createAndFlush(it: Account): Account
-    fun findAllPending(pageable: Pageable): Page<AccountDto>
+    fun createAndFlush(account: Account): Account
+    fun findAllPending(fullname: String, pageable: Pageable): Page<AccountDto>
     fun approve(id: Int)
     fun findById(id: Int): Account
     fun getAccountInfo(id: Int): AccountInfo
-    fun findAllGiftNeededAccounts(pageable: Pageable): Page<AccountDto>
+    fun findAllGiftNeededAccounts(fullname: String, pageable: Pageable): Page<AccountDto>
     fun createTemporalAccount(name: String): Account
     fun deleteTemporary()
 //    fun giveGift(id: Int)
@@ -47,7 +47,7 @@ interface RoleService {
 interface UserService {
     fun findByUsername(username: String): User?
     fun createMemberUser(username: String, password: String, account: Account): User
-    fun findAll(pageable: Pageable): Page<UserDto>
+    fun findAllByUsername(username: String, pageable: Pageable): Page<UserDto>
     fun getUpdateForm(id: Int): UserUpdateForm
     fun create(userCreateForm: UserCreateForm)
     fun update(userUpdateForm: UserUpdateForm)

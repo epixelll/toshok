@@ -29,6 +29,35 @@
             <div class="row">
 
                 <div class="col-md-12">
+                    <form id="searchForm" action="#" th:action="@{/account/list}" th:object="${accountSearchDto}" method="get" class="form-inline text-center" _lpchecked="1">
+                        <div class="form-group col-md-3">
+                            <label class="sr-only">Аты жөнү</label>
+                            <input th:field="*{fullname}" type="text" placeholder="Аты жөнү" class="form-control">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="sr-only">Статусу</label>
+                            <select th:field="*{status}">
+                                <option th:selected="*{status == null}" value="" selected>Баары</option>
+                                <option th:each="st : ${statuses}" th:value="${st}" th:text="${st}" th:selected="${st == status}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="sr-only">Баскычы</label>
+                            <select th:field="*{level}">
+                                <option th:selected="*{level == null}" value="">Баары</option>
+                                <option value="1" selected>Биринчи</option>
+                                <option value="2" selected>Экинчи</option>
+                                <option value="3" selected>Үчүнчү</option>
+                                <option value="4" selected>Төртүнчү</option>
+                                <option value="5" selected>Бешинчи</option>
+                            </select>
+                        </div>
+                        <input id="size" type="hidden" name="size" th:value="${accounts.size}">
+                        <input id="page" type="hidden" name="page" th:value="${accounts.number}">
+                        <button class="btn btn-default" type="submit">Издөө</button>
+                    </form>
+                </div>
+                <div class="col-md-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title">Тизмеси</h3>
@@ -72,27 +101,7 @@
                         </table>
 
                     </div>
-                    <nav class="text-center m-t-5">
-                        <ul class="pagination">
-                            <li th:class="${accounts.number eq 0} ? 'disabled' : ''">
-                                <a th:if="${not accounts.first}" th:href="@{${'/account/list'}(page=${accounts.number-1},size=${accounts.size})}" aria-label="Previous"> <span aria-hidden="true"><i class="fa fa-angle-left"></i></span> </a>
-                                <a th:if="${accounts.first}" href="javascript:void(0);" aria-label="Previous"> <span aria-hidden="true"><i class="fa fa-angle-left"></i></span> </a>
-                            </li>
-                            <li th:each="pageNo : ${#numbers.sequence(0, accounts.totalPages - 1)}" th:class="${accounts.number eq pageNo}? 'active' : ''">
-                                <a th:if="${accounts.number  eq pageNo}" href="javascript:void(0);">
-                                    <span th:text="${pageNo + 1}"></span>
-                                </a>
-                                <a th:if="${not (accounts.number  eq pageNo)}" th:href="@{${'/account/list'}(page=${pageNo},size=${accounts.size})}">
-                                    <span th:text="${pageNo + 1}"></span>
-                                </a>
-
-                            </li>
-                            <li th:class="${accounts.number + 1 ge accounts.totalPages} ? 'disabled' : ''">
-                                <a th:if="${not accounts.last}" th:href="@{${'/account/list'}(page=${accounts.number+1},size=${accounts.size})}" aria-label="Next"> <span aria-hidden="true"><i class="fa fa-angle-right"></i></span> </a>
-                                <a th:if="${accounts.last}" href="javascript:void(0);" aria-label="Next"> <span aria-hidden="true"><i class="fa fa-angle-right"></i></span> </a>
-                            </li>
-                        </ul>
-                    </nav>
+                    <div th:with="pglst=${accounts}" th:insert="fragments/search-and-page::pagination"></div>
                 </div>
 
 
@@ -113,6 +122,8 @@
 
 <!--Plugins-->
 <div th:replace="fragments/footer :: scripts"></div>
+
+<div th:insert="fragments/search-and-page::script"></div>
 
 </body>
 </html>

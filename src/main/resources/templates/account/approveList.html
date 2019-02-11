@@ -22,7 +22,17 @@
             <!--<div class="hr-title hr-long center"><abbr>Катталгандар</abbr>-->
             <!--</div>-->
             <div class="row">
-
+                <div class="col-md-12">
+                    <form id="searchForm" action="#" th:action="@{/account/approve-list}" th:object="${accountSearchDto}" method="get" class="form-inline text-center" _lpchecked="1">
+                        <div class="form-group col-md-3">
+                            <label class="sr-only">Аты жөнү</label>
+                            <input th:field="*{fullname}" type="text" placeholder="Аты жөнү" class="form-control">
+                        </div>
+                        <input id="size" type="hidden" name="size" th:value="${accounts.size}">
+                        <input id="page" type="hidden" name="page" th:value="${accounts.number}">
+                        <button class="btn btn-default" type="submit">Издөө</button>
+                    </form>
+                </div>
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -68,52 +78,8 @@
                             </tbody>
                         </table>
 
-
-
-                        <!--<nav class="text-center">-->
-                            <!--<ul class="pagination">-->
-                                <!--<li th:class="${contactsPage.number eq 0} ? 'disabled' : ''">-->
-                                    <!--<a th:if="${not contactsPage.firstPage}" th:href="@{${'/contacts'}(page=${contactsPage.number-1},size=${contactsPage.size})}">Previous</a>-->
-                                    <!--<a th:if="${contactsPage.firstPage}" href="javascript:void(0);">Previous</a>-->
-                                <!--</li>-->
-
-                                <!--<li th:each="pageNo : ${#numbers.sequence(0, contactsPage.totalPages - 1)}" th:class="${contactsPage.number eq pageNo}? 'active' : ''">-->
-                                    <!--<a th:if="${contactsPage.number  eq pageNo}" href="javascript:void(0);">-->
-                                        <!--<span th:text="${pageNo + 1}"></span>-->
-                                    <!--</a>-->
-                                    <!--<a th:if="${not (contactsPage.number  eq pageNo)}" th:href="@{${'/contacts'}(page=${pageNo},size=${contactsPage.size})}">-->
-                                        <!--<span th:text="${pageNo + 1}"></span>-->
-                                    <!--</a>-->
-
-                                <!--</li>-->
-                                <!--<li th:class="${contactsPage.number + 1 ge contactsPage.totalPages} ? 'disabled' : ''">-->
-                                    <!--<a th:if="${not contactsPage.lastPage}" th:href="@{${'/contacts'}(page=${contactsPage.number+1},size=${contactsPage.size})}">Next</a>-->
-                                    <!--<a th:if="${contactsPage.lastPage}" href="javascript:void(0);">Next</a>-->
-                                <!--</li>-->
-                            <!--</ul>-->
-                        <!--</nav>-->
                     </div>
-                    <nav class="text-center m-t-5">
-                        <ul class="pagination">
-                            <li th:class="${accounts.number eq 0} ? 'disabled' : ''">
-                                <a th:if="${not accounts.first}" th:href="@{${'/account/list'}(page=${accounts.number-1},size=${accounts.size})}" aria-label="Previous"> <span aria-hidden="true"><i class="fa fa-angle-left"></i></span> </a>
-                                <a th:if="${accounts.first}" href="javascript:void(0);" aria-label="Previous"> <span aria-hidden="true"><i class="fa fa-angle-left"></i></span> </a>
-                            </li>
-                            <li th:each="pageNo : ${#numbers.sequence(0, accounts.totalPages - 1)}" th:class="${accounts.number eq pageNo}? 'active' : ''">
-                                <a th:if="${accounts.number  eq pageNo}" href="javascript:void(0);">
-                                    <span th:text="${pageNo + 1}"></span>
-                                </a>
-                                <a th:if="${not (accounts.number  eq pageNo)}" th:href="@{${'/account/list'}(page=${pageNo},size=${accounts.size})}">
-                                    <span th:text="${pageNo + 1}"></span>
-                                </a>
-
-                            </li>
-                            <li th:class="${accounts.number + 1 ge accounts.totalPages} ? 'disabled' : ''">
-                                <a th:if="${not accounts.last}" th:href="@{${'/account/list'}(page=${accounts.number+1},size=${accounts.size})}" aria-label="Next"> <span aria-hidden="true"><i class="fa fa-angle-right"></i></span> </a>
-                                <a th:if="${accounts.last}" href="javascript:void(0);" aria-label="Next"> <span aria-hidden="true"><i class="fa fa-angle-right"></i></span> </a>
-                            </li>
-                        </ul>
-                    </nav>
+                    <div th:with="pglst=${accounts}" th:insert="fragments/search-and-page::pagination"></div>
                 </div>
 
 
@@ -135,6 +101,7 @@
 
 <!--Plugins-->
 <div th:replace="fragments/footer :: scripts"></div>
+<div th:insert="fragments/search-and-page::script"></div>
 
 </body>
 </html>
