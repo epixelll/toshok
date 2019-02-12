@@ -69,12 +69,24 @@
                                 <td>Дареги:</td>
                                 <td th:text="${account.address}">Address</td>
                             </tr>
+                            <tr>
+                                <td>Регион:</td>
+                                <td th:text="${account.regionName}">Address</td>
+                            </tr>
+                            <tr>
+                                <td>Пасспорт Номуру:</td>
+                                <td th:text="${account.passportNumber}">Address</td>
+                            </tr>
+                            <tr>
+                                <td>Катталган күнү:</td>
+                                <td th:text="${#temporals.format(account.registeredDate, 'dd.MM.yyyy')}">Address</td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <img style="width: 200px" th:src="@{'/' + ${account.checkPath}}"/>
+                    <img style="width: 300px" th:src="@{'/' + ${account.checkPath}}"/>
                 </div>
                 <div class="col-md-12">
                     <table class="table">

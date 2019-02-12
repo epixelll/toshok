@@ -36,22 +36,22 @@
                         </div>
                         <div class="form-group col-md-2">
                             <label class="sr-only">Статусу</label>
-                            <select th:field="*{status}">
-                                <option th:selected="*{status == null}" value="" selected>Баары</option>
+                            <select class="search-status" th:field="*{status}">
+                                <option th:selected="*{status == null}" value="" selected>Cтатус</option>
                                 <option th:each="st : ${statuses}" th:value="${st}" th:text="${st.kyrName}" th:selected="${st == status}"></option>
                             </select>
                         </div>
                         <div class="form-group col-md-2">
                             <label class="sr-only">Регион</label>
-                            <select th:field="*{regionId}">
-                                <option th:selected="*{regionId == null}" value="" selected>Баары</option>
+                            <select class="search-region" th:field="*{regionId}">
+                                <option th:selected="*{regionId == null}" value="" selected>Регион</option>
                                 <option th:each="region : ${regions}" th:value="${region.id}" th:text="${region.name}" th:selected="${region.id == regionId}"></option>
                             </select>
                         </div>
                         <div class="form-group col-md-2">
                             <label class="sr-only">Баскычы</label>
-                            <select th:field="*{level}">
-                                <option th:selected="*{level == null}" value="">Баары</option>
+                            <select class="search-level" th:field="*{level}">
+                                <option th:selected="*{level == null}" value="">Баскычы</option>
                                 <option value="1" selected>Биринчи</option>
                                 <option value="2" selected>Экинчи</option>
                                 <option value="3" selected>Үчүнчү</option>
@@ -128,6 +128,46 @@
 <div th:replace="fragments/footer :: scripts"></div>
 
 <div th:insert="fragments/search-and-page::script"></div>
+
+<link th:href="@{/lib/select2/css/select2.min.css}" rel="stylesheet" />
+<script th:src="@{/lib/select2/js/select2.min.js}"></script>
+<script th:src="@{/lib/select2/js/i18n/ru.js}"></script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    jQuery().ready(function(){
+        $('.search-status').select2({
+            tags: false,
+            multiple: false,
+            tokenSeparators: [',', ' '],
+            language: "ru",
+            allowClear: true,
+            placeholder: "Статус"
+        });
+    });
+    jQuery().ready(function(){
+        $('.search-region').select2({
+            tags: false,
+            multiple: false,
+            tokenSeparators: [',', ' '],
+            language: "ru",
+            allowClear: true,
+            placeholder: "Регион"
+        });
+    });
+    jQuery().ready(function(){
+        $('.search-level').select2({
+            tags: false,
+            multiple: false,
+            tokenSeparators: [',', ' '],
+            language: "ru",
+            allowClear: true,
+            placeholder: "Баскыч"
+        });
+    });
+    /*]]>*/
+</script>
+
 
 </body>
 </html>

@@ -76,7 +76,7 @@ class DefaultAccountService(
         account.parent?.let{ parent ->
             parent.takeIf { accountRepository.countByParentIdAndStatus(it.id!!, AccountStatus.APPROVED) >= 4}
                     ?.let { account.parent = null }
-            updateParentLevels(parent)
+            updateParentLevels(account)
         }
 
         return accountRepository.save(account)
@@ -227,6 +227,9 @@ class DefaultAccountService(
                 account.checkPath,
                 account.level,
                 account.phoneNumber,
+                account.passportNumber,
+                account.registeredDate,
+                account.region?.name,
                 account.parent?.fullname,
                 account.parent?.id,
                 children
