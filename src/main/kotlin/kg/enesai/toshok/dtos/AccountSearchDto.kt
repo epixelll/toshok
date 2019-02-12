@@ -7,5 +7,6 @@ data class AccountSearchDto(
         @field:NotNull
         var fullname: String? = "",
         var status: AccountStatus?,
-        var level: Int?
+        var level: Int?,
+        var regionId: Int?
 )

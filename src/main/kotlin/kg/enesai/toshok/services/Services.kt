@@ -35,6 +35,7 @@ interface AccountService {
     fun findAllGiftNeededAccounts(fullname: String, pageable: Pageable): Page<AccountDto>
     fun createTemporalAccount(name: String): Account
     fun deleteTemporary()
+    fun find20ByTerm(term: String): List<AccountSearchResultDto>
 //    fun giveGift(id: Int)
 }
 

@@ -12,6 +12,7 @@
     <link th:href="@{/css/plugins.css}" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
     <link th:href="@{/css/responsive.css}" rel="stylesheet">
+    <link th:href="@{/lib/select2/css/select2.min.css}" rel="stylesheet" />
 </head>
 
 <body>
@@ -46,9 +47,8 @@
 
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Кимдин колдонуучусу</label>
-                                    <select th:field="*{accountId}">
+                                    <select id="searchable-parent" th:field="*{accountId}">
                                         <option value="" selected>Кимдин колдонуучусу</option>
-                                        <option th:each="account : ${accounts}" th:value="${account.id}" th:text="${account.fullname}"></option>
                                     </select>
                                 </div>
                                 <div class="col-md-12 form-group">
@@ -59,7 +59,7 @@
                                 <div sec:authorize="hasAuthority('USER_CREATE_ALL')" class="col-md-12 form-group">
                                     <label class="sr-only">Роль</label>
                                     <select th:field="*{roleId}">
-                                        <option th:each="role : ${roles}" th:selected="${role.name == 'MEMBER'}" th:value="${role.id}" th:text="${role.name}"></option>
+                                        <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
                                     </select>
                                     <span th:if="${#fields.hasErrors('roleId')}" th:errors="*{roleId}" class="text-red">Role should be selected</span>
                                 </div>
@@ -98,6 +98,10 @@
 <!--Plugins-->
 <div th:replace="fragments/footer :: scripts"></div>
 
+
+<script th:src="@{/lib/select2/js/select2.min.js}"></script>
+<script th:src="@{/lib/select2/js/i18n/ru.js}"></script>
+
 <script th:inline="javascript">
     /*<![CDATA[*/
     jQuery().ready(function(){
@@ -109,6 +113,43 @@
             } else{
                 $('#confirm_password').parent().removeClass("has-success").addClass('has-error');
                 $('#submit_button').prop('disabled', true);
+            }
+        });
+
+        $('#searchable-parent').select2({
+            tags: false,
+            multiple: false,
+            tokenSeparators: [',', ' '],
+            minimumInputLength: 2,
+            minimumResultsForSearch: 10,
+            language: "ru",
+            allowClear: true,
+            placeholder: {
+                id: "",
+                placeholder: "Колдонуучу тандаңыз..."
+            },
+            ajax: {
+                url: "/account/search",
+                dataType: "json",
+                type: "GET",
+                data: function (params) {
+
+                    var queryParameters = {
+                        term: params.term
+                    }
+                    return queryParameters;
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            console.log(item);
+                            return {
+                                text: item.fullname,
+                                id: item.id
+                            }
+                        })
+                    };
+                }
             }
         });
     });

@@ -1,7 +1,6 @@
 package kg.enesai.toshok.controllers
 
-import kg.enesai.toshok.dtos.AccountSearchDto
-import kg.enesai.toshok.dtos.AccountUpdateForm
+import kg.enesai.toshok.dtos.*
 import kg.enesai.toshok.enums.AccountStatus
 import kg.enesai.toshok.enums.Permission
 import kg.enesai.toshok.services.AccountService
@@ -30,8 +29,16 @@ class AccountController(
     fun getAccountList(@ModelAttribute("accountSearchDto") accountSearchDto: AccountSearchDto, pageable: Pageable, model: Model): String {
         model.addAttribute("accounts", accountService.findAll(accountSearchDto, pageable))
         model.addAttribute("statuses", AccountStatus.values())
+        model.addAttribute("regions", regionService.findAll())
         return "account/accountList"
     }
+
+    @GetMapping("/search")
+    @ResponseBody
+    fun search(@RequestParam("term") term: String): List<AccountSearchResultDto> {
+        return accountService.find20ByTerm(term)
+    }
+
 
     @GetMapping("/info/{id}")
     fun getAccountInfo(authentication: Authentication, @PathVariable id: Int, model: Model): String {
@@ -55,10 +62,10 @@ class AccountController(
 
     @GetMapping("/getAccountUpdateForm/{id}")
     fun getAccountUpdateForm(@PathVariable id: Int, model: Model): String {
-        model.addAttribute("accountUpdateForm", accountService.getUpdateForm(id))
+        val accountUpdateForm = accountService.getUpdateForm(id)
+        model.addAttribute("accountUpdateForm", accountUpdateForm)
         model.addAttribute("regions", regionService.findAll())
-        val accountSearchDto = AccountSearchDto("", null, null)
-        model.addAttribute("accounts", accountService.findAll(accountSearchDto, PageRequest.of(0, 20)))
+        accountUpdateForm.parentId?.let { id -> model.addAttribute("parent", accountService.findById(id).let { AccountDto.of(it) }) }
         return "account/accountUpdateForm"
     }
 
@@ -77,8 +84,7 @@ class AccountController(
     fun update(@Valid @ModelAttribute("accountUpdateForm") accountUpdateForm: AccountUpdateForm, bindingResult: BindingResult, model: Model): String {
         if(bindingResult.hasErrors()){
             model.addAttribute("regions", regionService.findAll())
-            val accountSearchDto = AccountSearchDto("", null, null)
-            model.addAttribute("accounts", accountService.findAll(accountSearchDto, PageRequest.of(0, 20)))
+            accountUpdateForm.parentId?.let { id -> model.addAttribute("parent", accountService.findById(id).let { AccountDto.of(it) }) }
             return "account/accountUpdateForm"
         }
         accountService.update(accountUpdateForm)

@@ -26,6 +26,12 @@ interface AccountRepository : JpaRepository<Account, Int> {
     @Query(value ="SELECT a from Account a where lower(a.fullname) like concat('%', :fullname, '%') and a.level > (SELECT count(g) from Gift g where g.account = a) and a.status = 'APPROVED'")
     fun findAllGiftNeededAccounts(@Param("fullname") fullname: String, pageable: Pageable): Page<Account>
 
+    @Query(value = "SELECT a from Account a where lower(a.fullname) like concat('%', :fullname, '%') " +
+            "and (null = :status OR a.status = :status) " +
+            "and (null = :level OR a.level = :level) " +
+            "and (null = :regionId OR a.region.id = :regionId) ")
+    fun search(fullname: String?, status: AccountStatus?, level: Int?, regionId: Int?, pageable: Pageable): Page<Account>
+
     fun deleteByStatus(status: AccountStatus)
     fun findAllByFullnameIgnoreCaseContainingAndStatusAndLevel(fullname: String, status: AccountStatus, level: Int, pageable: Pageable): Page<Account>
     fun findAllByFullnameIgnoreCaseContainingAndStatus(fullname: String, status: AccountStatus, pageable: Pageable): Page<Account>

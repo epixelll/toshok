@@ -11,6 +11,7 @@
     <link th:href="@{/css/plugins.css}" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
     <link th:href="@{/css/responsive.css}" rel="stylesheet">
+    <link th:href="@{/lib/select2/css/select2.min.css}" rel="stylesheet" />
 </head>
 
 <body>
@@ -72,9 +73,8 @@
                                 </div>
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Ким аркылуу катталганы</label>
-                                    <select th:field="*{parentId}">
-                                        <option value="" selected>Ким аркылуу катталганы</option>
-                                        <option th:each="account : ${accounts}" th:value="${account.id}" th:text="${account.fullname}"></option>
+                                    <select id="searchable-parent" th:field="*{parentId}">
+                                        <option value="">Ким аркылуу катталганы</option>
                                     </select>
                                 </div>
 
@@ -121,6 +121,9 @@
 <!--Template functions-->
 <script th:src="@{/js/functions.js}"></script>
 
+<script th:src="@{/lib/select2/js/select2.min.js}"></script>
+<script th:src="@{/lib/select2/js/i18n/ru.js}"></script>
+
 <script th:inline="javascript">
     /*<![CDATA[*/
     jQuery().ready(function(){
@@ -131,6 +134,44 @@
             } else{
                 $('#confirm_password').parent().removeClass("has-success").addClass('has-error');
                 $('#submit_button').prop('disabled', true);
+            }
+        });
+
+        // In your Javascript (external .js resource or <script> tag)
+        $('#searchable-parent').select2({
+            tags: false,
+            multiple: false,
+            tokenSeparators: [',', ' '],
+            minimumInputLength: 2,
+            minimumResultsForSearch: 10,
+            language: "ru",
+            allowClear: true,
+            placeholder: {
+                id: "",
+                placeholder: "Колдонуучу тандаңыз..."
+            },
+            ajax: {
+                url: "/account/search",
+                dataType: "json",
+                type: "GET",
+                data: function (params) {
+
+                    var queryParameters = {
+                        term: params.term
+                    }
+                    return queryParameters;
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            console.log(item);
+                            return {
+                                text: item.fullname,
+                                id: item.id
+                            }
+                        })
+                    };
+                }
             }
         });
     });

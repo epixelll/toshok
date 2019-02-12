@@ -65,11 +65,13 @@
                                 <td th:text="${account.phoneNumber}">Phone number</td>
                                 <td th:text="${account.parentName}">Parent name</td>
                                 <td>
-                                    <button th:if="${account.parentStatus != null && account.parentStatus != 'APPROVED'}"
+                                    <button th:if="${account.parentStatus != null && account.parentStatus != T(kg.enesai.toshok.enums.AccountStatus).APPROVED}"
                                             type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="" data-original-title="Байланган кишиси тастыктала элек"><i class="fa fa-info"></i></button>
-                                    <button th:if="${account.parentStatus != null and account.parentStatus == 'APPROVED' and account.approvedSiblingCount >= 4}"
+
+                                    <button th:if="${account.parentStatus != null and account.parentStatus == T(kg.enesai.toshok.enums.AccountStatus).APPROVED and account.approvedSiblingCount >= 4}"
                                             type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="" data-original-title="Байланышкан кишисинде 4 кишиси толук."><i class="fa fa-info"></i></button>
-                                    <a th:if="${account.parentStatus == null or account.parentStatus == 'APPROVED' or account.approvedSiblingCount < 4}"
+
+                                    <a th:if="${account.parentStatus == null or (account.parentStatus == T(kg.enesai.toshok.enums.AccountStatus).APPROVED and account.approvedSiblingCount < 4)}"
                                             type="button" class="btn btn-success" th:href="@{'/account/approve/' + ${account.id}}">
                                         <i class="fa fa-check"></i>
                                     </a>

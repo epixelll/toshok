@@ -15,7 +15,6 @@ data class AccountUpdateForm(
         @field:NotBlank
         var fullname: String?,
 
-        @field:NotBlank
         var address: String?,
 
         var checkNumber: String?,
@@ -24,19 +23,14 @@ data class AccountUpdateForm(
 
         val checkPath: String?,
 
-        @field:NotBlank
         var passportNumber: String?,
 
-        @field:DateTimeFormat(pattern = "dd.MM.yyyy")
         var registeredDate: LocalDate?,
 
-        @field:NotNull
         var regionId: Int?,
 
         var parentId: Int?,
 
-        @field:NotBlank
-        @field:Size(min = 9, max = 13)
         var phoneNumber: String?
 ) {
         companion object {

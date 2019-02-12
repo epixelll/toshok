@@ -65,6 +65,10 @@
                                 <td>Тел номуру:</td>
                                 <td th:text="${account.phoneNumber}">Phone number</td>
                             </tr>
+                            <tr>
+                                <td>Дареги:</td>
+                                <td th:text="${account.address}">Address</td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -155,6 +159,7 @@
                         <table class="table table-striped">
                             <thead>
                             <tr>
+                                <th>#</th>
                                 <th>Аты жөнү</th>
                                 <th>Кимге Байланган</th>
                                 <th><i class="fa fa-gift"></th>
@@ -162,6 +167,7 @@
                             </thead>
                             <tbody>
                             <tr th:each="child3, iter : ${child.children3}">
+                                <td th:text="${iter.index+1}"></td>
                                 <td>
                                     <a th:href="@{'/account/info/' + ${child3.id}}">
                                         <span th:text="${child3.fullname}">parent</span>
@@ -181,6 +187,7 @@
                         <table class="table table-striped">
                             <thead>
                             <tr>
+                                <th>#</th>
                                 <th>Аты жөнү</th>
                                 <th>Кимге Байланган</th>
                                 <th><i class="fa fa-gift"></i></th>
@@ -188,6 +195,7 @@
                             </thead>
                             <tbody>
                             <tr th:each="child4, iter : ${child.children4}">
+                                <td th:text="${iter.index+1}"></td>
                                 <td>
                                     <a th:href="@{'/account/info/' + ${child4.id}}">
                                         <span th:text="${child4.fullname}">parent</span>

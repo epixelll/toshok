@@ -27,7 +27,7 @@ class SecurityConfig(
                 .csrf().disable()
                 .authorizeRequests()
                     .antMatchers("/css/**", "/checks/**", "/js/**", "/images/**", "/fonts/**", "/lib/**").permitAll()
-                    .antMatchers("/", "/home", "/welcome", "/login", "/registration/**", "/registration/upload-csv").permitAll()
+                    .antMatchers("/", "/home", "/welcome", "/login", "/registration/**", "/account/search", "/registration/upload-csv").permitAll()
                     .antMatchers("/account/list").hasAuthority("ACCOUNT_VIEW")
                     .antMatchers("/account/approve").hasAuthority("ACCOUNT_APPROVE")
                     .antMatchers("/user/list").hasAuthority("USER_VIEW")

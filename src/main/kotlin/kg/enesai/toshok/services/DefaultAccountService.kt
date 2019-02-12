@@ -7,6 +7,7 @@ import kg.enesai.toshok.enums.Permission
 import kg.enesai.toshok.repositories.AccountRepository
 import kg.enesai.toshok.services.endpoint.FileUploadEndpointService
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -28,17 +29,18 @@ class DefaultAccountService(
 
     @Transactional(readOnly = true)
     override fun findAll(accountSearchDto: AccountSearchDto, pageable: Pageable): Page<AccountDto> {
-        val accounts: Page<Account> = if(accountSearchDto.status != null && accountSearchDto.level != null)
-            accountRepository.findAllByFullnameIgnoreCaseContainingAndStatusAndLevel(accountSearchDto.fullname!!, accountSearchDto.status!!, accountSearchDto.level!!, pageable)
-        else if(accountSearchDto.status != null) accountRepository.findAllByFullnameIgnoreCaseContainingAndStatus(accountSearchDto.fullname!!, accountSearchDto.status!!, pageable)
-        else if(accountSearchDto.level != null) accountRepository.findAllByFullnameIgnoreCaseContainingAndLevel(accountSearchDto.fullname!!, accountSearchDto.level!!, pageable)
-        else accountRepository.findAllByFullnameIgnoreCaseContaining(accountSearchDto.fullname!!, pageable)
+        val accounts: Page<Account> = accountRepository.search(accountSearchDto.fullname, accountSearchDto.status, accountSearchDto.level, accountSearchDto.regionId, pageable)
         return accounts.map { AccountDto.of(it) }
     }
 
     @Transactional(readOnly = true)
     override fun findAllGiftNeededAccounts(fullname: String, pageable: Pageable): Page<AccountDto> {
         return accountRepository.findAllGiftNeededAccounts(fullname.toLowerCase(), pageable).map { AccountDto.of(it) }
+    }
+
+    @Transactional
+    override fun find20ByTerm(term: String): List<AccountSearchResultDto> {
+        return accountRepository.findAllByFullnameIgnoreCaseContaining(term, PageRequest.of(0, 20)).map { AccountSearchResultDto.of(it)}.content
     }
 
     @Transactional(readOnly = true)
@@ -145,6 +147,11 @@ class DefaultAccountService(
     @Transactional
     override fun approve(id: Int) {
         val account = accountRepository.findById(id).orElseThrow { throw EntityNotFoundException("Entity with this id not found") }
+        account.parent?.let {parent ->
+            parent.takeIf { accountRepository.countByParentIdAndStatus(it.id!!, AccountStatus.APPROVED) >= 4 }
+                    ?.let { throw IllegalStateException("""Parent Account(id = ${it.id}, name = ${it.fullname}) already has 4 active children""") }
+            parent.takeIf { it.status != AccountStatus.APPROVED }?.let { throw IllegalStateException("""Parent Account(id = ${it.id}, name = ${it.fullname}) has not been APPROVED""") }
+        }
         account.status = AccountStatus.APPROVED
         accountRepository.save(account)
         account.parent?.let { updateParentLevels(it) }
@@ -215,6 +222,7 @@ class DefaultAccountService(
                 account.id!!,
                 account.status,
                 account.fullname,
+                account.address,
                 account.checkNumber,
                 account.checkPath,
                 account.level,
