@@ -23,10 +23,12 @@ interface AccountRepository : JpaRepository<Account, Int> {
     @Query("update Account set parent.id = null where parent.id = :id")
     fun removeChildsByParentId(@Param("id") id: Int)
 
-    @Query(value ="SELECT a from Account a where lower(a.fullname) like concat('%', :fullname, '%') and a.level > (SELECT count(g) from Gift g where g.account = a) and a.status = 'APPROVED'")
-    fun findAllGiftNeededAccounts(@Param("fullname") fullname: String, pageable: Pageable): Page<Account>
+    @Query(value ="SELECT a from Account a where lower(a.fullname) like concat('%', lower(:fullname), '%') " +
+            "and (:regionId = null or a.region.id = :regionId) " +
+            "and a.level > (SELECT count(g) from Gift g where g.account = a) and a.status = 'APPROVED'")
+    fun findAllGiftNeededAccounts(@Param("fullname") fullname: String, regionId: Int?, pageable: Pageable): Page<Account>
 
-    @Query(value = "SELECT a from Account a where lower(a.fullname) like concat('%', :fullname, '%') " +
+    @Query(value = "SELECT a from Account a where lower(a.fullname) like concat('%', lower(:fullname), '%') " +
             "and (null = :status OR a.status = :status) " +
             "and (null = :level OR a.level = :level) " +
             "and (null = :regionId OR a.region.id = :regionId) ")
@@ -46,6 +48,7 @@ interface RoleRepository : JpaRepository<Role, Int> {
 interface UserRepository : JpaRepository<User, Int>{
     fun findByUsername(username: String): User?
     fun findAllByUsernameIgnoreCaseContaining(username: String, pageable: Pageable): Page<User>
+    fun deleteByAccount(account: Account)
 }
 
 interface GiftRepository: JpaRepository<Gift, Int>{

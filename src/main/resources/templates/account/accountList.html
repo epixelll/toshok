@@ -91,12 +91,12 @@
                                     <a type="button" class="btn btn-info" th:href="@{'/account/info/' + ${account.id}}">
                                         <i class="fa fa-info"></i>
                                     </a>
-                                    <a th:if="${#authorization.expression('hasRole(''ACCOUNT_UPDATE_APPROVED'')') or account.status != T(kg.enesai.toshok.enums.AccountStatus).APPROVED}"
-                                            type="button" class="btn btn-light" th:href="@{'/account/getAccountUpdateForm/' + ${account.id}}">
+                                    <a th:if="${#authorization.expression('hasAuthority(''ACCOUNT_UPDATE_APPROVED'')') or account.status != T(kg.enesai.toshok.enums.AccountStatus).APPROVED}"
+                                            type="button" class="btn btn-light" th:href="@{'/account/getAccountUpdateForm/' + ${account.id}}" >
                                         <i class="fa fa-cog"></i>
                                     </a>
-                                    <a th:if="${#authorization.expression('hasRole(''ACCOUNT_DELETE_APPROVED'')') or account.status != T(kg.enesai.toshok.enums.AccountStatus).APPROVED}"
-                                       type="button" class="btn btn-red" th:href="@{'/account/delete/' + ${account.id}}">
+                                    <a th:if="${#authorization.expression('hasAuthority(''ACCOUNT_DELETE_APPROVED'')') or account.status != T(kg.enesai.toshok.enums.AccountStatus).APPROVED}"
+                                       type="button" class="btn btn-red" th:href="@{'/account/delete/' + ${account.id}}" onclick="return confirm('Өчүрүүгө макулсузбу?')">
                                         <i class="fa fa-trash"></i>
                                     </a>
                                 </td>

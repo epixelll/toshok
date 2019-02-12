@@ -32,7 +32,7 @@ interface AccountService {
     fun approve(id: Int)
     fun findById(id: Int): Account
     fun getAccountInfo(id: Int): AccountInfo
-    fun findAllGiftNeededAccounts(fullname: String, pageable: Pageable): Page<AccountDto>
+    fun findAllGiftNeededAccounts(accountSearchDto: AccountSearchDto, pageable: Pageable): Page<AccountDto>
     fun createTemporalAccount(name: String): Account
     fun deleteTemporary()
     fun find20ByTerm(term: String): List<AccountSearchResultDto>

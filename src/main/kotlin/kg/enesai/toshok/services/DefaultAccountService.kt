@@ -5,6 +5,7 @@ import kg.enesai.toshok.dtos.*
 import kg.enesai.toshok.enums.AccountStatus
 import kg.enesai.toshok.enums.Permission
 import kg.enesai.toshok.repositories.AccountRepository
+import kg.enesai.toshok.repositories.UserRepository
 import kg.enesai.toshok.services.endpoint.FileUploadEndpointService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -20,7 +21,8 @@ class DefaultAccountService(
         private val accountRepository: AccountRepository,
         private val regionService: RegionService,
         private val fileUploadEndpointService: FileUploadEndpointService,
-        private val currentUserService: CurrentUserService
+        private val currentUserService: CurrentUserService,
+        private val userRepository: UserRepository
 ) : AccountService {
     @Transactional(readOnly = true)
     override fun findAll(): List<AccountDto> {
@@ -34,8 +36,8 @@ class DefaultAccountService(
     }
 
     @Transactional(readOnly = true)
-    override fun findAllGiftNeededAccounts(fullname: String, pageable: Pageable): Page<AccountDto> {
-        return accountRepository.findAllGiftNeededAccounts(fullname.toLowerCase(), pageable).map { AccountDto.of(it) }
+    override fun findAllGiftNeededAccounts(accountSearchDto: AccountSearchDto, pageable: Pageable): Page<AccountDto> {
+        return accountRepository.findAllGiftNeededAccounts(accountSearchDto.fullname!!.toLowerCase(), accountSearchDto.regionId, pageable).map { AccountDto.of(it) }
     }
 
     @Transactional
@@ -76,10 +78,11 @@ class DefaultAccountService(
         account.parent?.let{ parent ->
             parent.takeIf { accountRepository.countByParentIdAndStatus(it.id!!, AccountStatus.APPROVED) >= 4}
                     ?.let { account.parent = null }
-            updateParentLevels(account)
         }
+        val saved = accountRepository.save(account)
+        updateParentLevels(saved)
 
-        return accountRepository.save(account)
+        return saved
     }
 
     @Transactional
@@ -139,6 +142,7 @@ class DefaultAccountService(
         val account = accountRepository.findById(id).orElseThrow { EntityNotFoundException("""Account with id = $id not found""") }
         if(!currentUserService.currentUserHasPermission(Permission.ACCOUNT_DELETE_APPROVED) && account.status == AccountStatus.APPROVED)
             throw IllegalAccessException("You don't have permission to delete Approved accounts")
+        val users = userRepository.deleteByAccount(account)
         accountRepository.removeChildsByParentId(id)
         account.parent?.let { updateParentLevels(it) }
         accountRepository.deleteById(id)

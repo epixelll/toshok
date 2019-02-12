@@ -4,6 +4,7 @@ import kg.enesai.toshok.dtos.AccountSearchDto
 import kg.enesai.toshok.dtos.GiftCreateForm
 import kg.enesai.toshok.services.AccountService
 import kg.enesai.toshok.services.GiftService
+import kg.enesai.toshok.services.RegionService
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -15,11 +16,13 @@ import javax.validation.Valid
 @RequestMapping("gift")
 class GiftController(
         private val accountService: AccountService,
-        private val giftService: GiftService
+        private val giftService: GiftService,
+        private val regionService: RegionService
 ) {
     @GetMapping("/gift-needed")
     fun getGiftNeeded(@ModelAttribute("accountSearchDto") accountSearchDto: AccountSearchDto, pageable: Pageable, model: Model): String {
-        model.addAttribute("accounts", accountService.findAllGiftNeededAccounts(accountSearchDto.fullname!!, pageable))
+        model.addAttribute("accounts", accountService.findAllGiftNeededAccounts(accountSearchDto, pageable))
+        model.addAttribute("regions", regionService.findAll())
         return "gift/giftNeededAccountList"
     }
 
