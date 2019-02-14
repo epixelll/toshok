@@ -44,11 +44,10 @@
                                         <!--customer please login at the top of the page.</p>-->
                                 </div>
                                 <input th:field="*{id}" type="hidden" >
-
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Аты жөнү</label>
                                     <input th:field="*{fullname}" type="text" value="" placeholder="Аты жөнү" class="form-control input-lg" th:required>
-                                    <span th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}" class="text-red">Fullname can't be blank</span>
+                                    <span th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}" class="text-red">Fullname can't be blank and should be unique</span>
                                 </div>
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Дареги</label>
@@ -89,6 +88,7 @@
                                     <select id="searchable-parent" th:field="*{parentId}">
                                         <option th:if="${parent != null}" th:value="${parent.id}" th:text="${parent.fullname}" selected></option>
                                     </select>
+                                    <span th:if="${#fields.hasErrors('parentId')}" th:errors="*{parentId}" class="text-red">Parent has already 4 approved childs.</span>
                                 </div>
 
                                 <hr/>
@@ -152,10 +152,7 @@
             minimumResultsForSearch: 10,
             language: "ru",
             allowClear: true,
-            placeholder: {
-                id: "",
-                placeholder: "Колдонуучу тандаңыз..."
-            },
+            placeholder: "Ким аркылуу катталганы",
             ajax: {
                 url: "/account/search",
                 dataType: "json",

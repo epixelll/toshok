@@ -29,6 +29,11 @@ class DefaultAccountService(
         return accountRepository.findAll().map { AccountDto.of(it) }
     }
 
+    @Transactional
+    override fun hasFourChild(id: Int): Boolean {
+        return accountRepository.countAllByParentIdAndStatus(id, AccountStatus.APPROVED) >= 4
+    }
+
     @Transactional(readOnly = true)
     override fun findAll(accountSearchDto: AccountSearchDto, pageable: Pageable): Page<AccountDto> {
         val accounts: Page<Account> = accountRepository.search(accountSearchDto.fullname, accountSearchDto.status, accountSearchDto.level, accountSearchDto.regionId, pageable)

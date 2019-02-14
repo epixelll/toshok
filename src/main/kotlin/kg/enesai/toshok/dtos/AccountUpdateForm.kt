@@ -1,6 +1,9 @@
 package kg.enesai.toshok.dtos
 
 import kg.enesai.toshok.domains.Account
+import kg.enesai.toshok.validators.FourApprovedChilds
+import kg.enesai.toshok.validators.UniqueFullname
+import kg.enesai.toshok.validators.UniqueFullnameOnUpdate
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDate
@@ -8,6 +11,7 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
+@UniqueFullnameOnUpdate
 data class AccountUpdateForm(
         @field:NotNull
         var id: Int,
@@ -21,14 +25,16 @@ data class AccountUpdateForm(
 
         var checkPhoto: MultipartFile?,
 
-        val checkPath: String?,
+//        val checkPath: String?,
 
         var passportNumber: String?,
 
+        @field:DateTimeFormat(pattern = "dd.MM.yyyy")
         var registeredDate: LocalDate?,
 
         var regionId: Int?,
 
+        @field:FourApprovedChilds
         var parentId: Int?,
 
         var phoneNumber: String?
@@ -40,7 +46,7 @@ data class AccountUpdateForm(
                     account.address,
                     account.checkNumber,
                     null,
-                    account.checkPath,
+//                    account.checkPath,
                     account.passportNumber,
                     account.registeredDate,
                     account.region?.id,

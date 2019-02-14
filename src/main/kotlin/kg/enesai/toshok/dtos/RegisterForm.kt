@@ -1,12 +1,15 @@
 package kg.enesai.toshok.dtos
 
+import kg.enesai.toshok.validators.FourApprovedChilds
+import kg.enesai.toshok.validators.UniqueFullname
 import org.springframework.web.multipart.MultipartFile
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 data class RegisterForm(
-        @field:NotBlank
+        @field:NotNull
+        @field:UniqueFullname
         var fullname: String?,
 
         @field:NotBlank
@@ -22,6 +25,7 @@ data class RegisterForm(
         @field:NotNull
         var regionId: Int?,
 
+        @field:FourApprovedChilds
         var parentId: Int?,
 
         @field:NotBlank

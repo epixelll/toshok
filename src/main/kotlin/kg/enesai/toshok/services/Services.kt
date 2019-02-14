@@ -31,6 +31,7 @@ interface AccountService {
     fun findAllPending(fullname: String, pageable: Pageable): Page<AccountDto>
     fun approve(id: Int)
     fun findById(id: Int): Account
+    fun hasFourChild(id: Int): Boolean
     fun getAccountInfo(id: Int): AccountInfo
     fun findAllGiftNeededAccounts(accountSearchDto: AccountSearchDto, pageable: Pageable): Page<AccountDto>
     fun createTemporalAccount(name: String): Account
