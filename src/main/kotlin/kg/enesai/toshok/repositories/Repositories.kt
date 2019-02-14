@@ -39,7 +39,7 @@ interface AccountRepository : JpaRepository<Account, Int> {
     fun findAllByFullnameIgnoreCaseContainingAndStatus(fullname: String, status: AccountStatus, pageable: Pageable): Page<Account>
     fun findAllByFullnameIgnoreCaseContainingAndLevel(fullname: String, level: Int, pageable: Pageable): Page<Account>
     fun findAllByFullnameIgnoreCaseContaining(fullname: String, pageable: Pageable): Page<Account>
-    fun countAllByParentIdAndStatus(id: Int, approved: AccountStatus): Int
+    fun findAllByParentIdAndStatus(id: Int, approved: AccountStatus): List<Account>
 }
 
 interface RoleRepository : JpaRepository<Role, Int> {

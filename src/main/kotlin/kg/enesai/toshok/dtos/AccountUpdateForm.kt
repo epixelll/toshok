@@ -2,6 +2,7 @@ package kg.enesai.toshok.dtos
 
 import kg.enesai.toshok.domains.Account
 import kg.enesai.toshok.validators.FourApprovedChilds
+import kg.enesai.toshok.validators.FourApprovedChildsOnUpdate
 import kg.enesai.toshok.validators.UniqueFullname
 import kg.enesai.toshok.validators.UniqueFullnameOnUpdate
 import org.springframework.format.annotation.DateTimeFormat
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 @UniqueFullnameOnUpdate
+@FourApprovedChildsOnUpdate
 data class AccountUpdateForm(
         @field:NotNull
         var id: Int,
@@ -34,7 +36,6 @@ data class AccountUpdateForm(
 
         var regionId: Int?,
 
-        @field:FourApprovedChilds
         var parentId: Int?,
 
         var phoneNumber: String?

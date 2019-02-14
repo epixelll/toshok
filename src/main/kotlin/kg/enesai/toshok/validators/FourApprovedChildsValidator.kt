@@ -24,9 +24,10 @@ class FourApprovedChildsValidator(
 
     override fun initialize(fourApprovedChilds: FourApprovedChilds?) {}
 
-    override fun isValid(parentId: Int?,
-                         cxt: ConstraintValidatorContext): Boolean {
-        return (parentId == null || !accountService.hasFourChild(parentId))
+    override fun isValid(parentId: Int?, cxt: ConstraintValidatorContext): Boolean {
+        if(parentId == null) return true
+        val parentsChilds = accountService.findAllApprovedByParentId(parentId)
+        return parentsChilds.size < 4 || parentsChilds.map { it.id }.contains(parentId)
     }
 
 }

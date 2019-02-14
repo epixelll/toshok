@@ -30,8 +30,8 @@ class DefaultAccountService(
     }
 
     @Transactional
-    override fun hasFourChild(id: Int): Boolean {
-        return accountRepository.countAllByParentIdAndStatus(id, AccountStatus.APPROVED) >= 4
+    override fun findAllApprovedByParentId(id: Int): List<Account> {
+        return accountRepository.findAllByParentIdAndStatus(id, AccountStatus.APPROVED)
     }
 
     @Transactional(readOnly = true)
