@@ -27,7 +27,7 @@ class FourApprovedChildsOnUpdateValidator(
 
     override fun isValid(any: Any, cxt: ConstraintValidatorContext): Boolean {
         val id = BeanUtils.getProperty(any, "id").toInt()
-        val parentId = BeanUtils.getProperty(any, "parentId").toIntOrNull() ?: return true
+        val parentId = BeanUtils.getProperty(any, "parentId")?.toIntOrNull() ?: return true
 
         val parentsChilds = accountService.findAllApprovedByParentId(parentId)
         val isValid = parentsChilds.size < 4 || parentsChilds.map { it.id }.contains(id)

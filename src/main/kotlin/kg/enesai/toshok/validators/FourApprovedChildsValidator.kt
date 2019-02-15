@@ -11,7 +11,7 @@ import kotlin.reflect.KClass
 @Constraint(validatedBy = [FourApprovedChildsValidator::class])
 @Target(allowedTargets = [AnnotationTarget.FIELD])
 @Retention(AnnotationRetention.RUNTIME)
-annotation class FourApprovedChilds(
+annotation class FourApprovedChilds (
         val message: String = "Parent has already 4 approved childs.",
         val groups: Array<KClass<*>> = arrayOf(),
         val payload: Array<KClass<out Payload>> = arrayOf()

@@ -22,7 +22,7 @@
 
     <!-- Section -->
     <!--<section class="fullscreen" th:style="'background-image:url(' + @{/images/pages/1.jpg} + '); overflow: scroll'">-->
-    <section class="fullscreen" style="background-color: #F0F2F2; overflow: scroll">
+    <section class="" style="background-color: #F0F2F2; overflow: scroll">
         <div class="container container-fullscreen">
             <div class="text-middle">
                 <div class="text-center m-b-30">
@@ -74,8 +74,9 @@
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Ким аркылуу катталганы</label>
                                     <select id="searchable-parent" th:field="*{parentId}">
-                                        <option value="">Ким аркылуу катталганы</option>
+                                        <option th:if="${parent != null}" th:value="${parent.id}" th:text="${parent.fullname}" selected></option>
                                     </select>
+                                    <span th:if="${#fields.hasErrors('parentId')}" th:errors="*{parentId}" class="text-red">Parent has already 4 approved childs.</span>
                                 </div>
 
                                 <hr/>

@@ -36,7 +36,7 @@
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Тизмеси</h3>
+                            <h3 class="panel-title">Тастыктоо Тизмеси</h3>
                         </div>
                         <table class="table">
                             <thead>
@@ -74,6 +74,15 @@
                                     <a th:if="${account.parentStatus == null or (account.parentStatus == T(kg.enesai.toshok.enums.AccountStatus).APPROVED and account.approvedSiblingCount < 4)}"
                                             type="button" class="btn btn-success" th:href="@{'/account/approve/' + ${account.id}}">
                                         <i class="fa fa-check"></i>
+                                    </a>
+
+                                    <a th:if="${#authorization.expression('hasAuthority(''ACCOUNT_UPDATE_APPROVED'')') or account.status != T(kg.enesai.toshok.enums.AccountStatus).APPROVED}"
+                                       type="button" class="btn btn-light" th:href="@{'/account/getAccountUpdateForm/' + ${account.id}}" >
+                                        <i class="fa fa-cog"></i>
+                                    </a>
+                                    <a th:if="${#authorization.expression('hasAuthority(''ACCOUNT_DELETE_APPROVED'')') or account.status != T(kg.enesai.toshok.enums.AccountStatus).APPROVED}"
+                                       type="button" class="btn btn-red" th:href="@{'/account/delete/' + ${account.id}}" onclick="return confirm('Өчүрүүгө макулсузбу?')">
+                                        <i class="fa fa-trash"></i>
                                     </a>
                                 </td>
                             </tr>
