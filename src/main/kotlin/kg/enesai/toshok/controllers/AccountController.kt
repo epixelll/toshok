@@ -27,9 +27,11 @@ class AccountController(
 ) {
     @GetMapping("/list")
     fun getAccountList(@ModelAttribute("accountSearchDto") accountSearchDto: AccountSearchDto, pageable: Pageable, model: Model): String {
-        model.addAttribute("accounts", accountService.findAll(accountSearchDto, pageable))
+        val accountsPage = accountService.findAll(accountSearchDto, pageable)
+        model.addAttribute("accounts", accountsPage)
         model.addAttribute("statuses", AccountStatus.values())
         model.addAttribute("regions", regionService.findAll())
+        if(pageable.pageNumber >= accountsPage.totalElements) model.addAttribute("pageable", PageRequest.of(accountsPage.totalPages, pageable.pageSize))
         return "account/accountList"
     }
 
@@ -99,14 +101,16 @@ class AccountController(
 
     @GetMapping("/approve-list")
     fun getApproveList(@ModelAttribute("accountSearchDto") accountSearchDto: AccountSearchDto, pageable: Pageable, model: Model): String {
-        model.addAttribute("accounts", accountService.findAllPending(accountSearchDto.fullname!!, pageable))
+        val pendingPage = accountService.findAllPending(accountSearchDto.fullname!!, pageable)
+        model.addAttribute("accounts", pendingPage)
+        if(pageable.pageNumber >= pendingPage.totalPages) model.addAttribute("pageable", PageRequest.of(pendingPage.totalPages, pageable.pageSize))
         return "account/approveList"
     }
 
     @GetMapping("/approve/{id}")
-    fun approve(@PathVariable id: Int): String {
+    fun approve(@PathVariable id: Int, @RequestParam page: Int): String {
         accountService.approve(id)
-        return "redirect:/account/approve-list"
+        return "redirect:/account/approve-list?page=$page"
     }
 
 //    @GetMapping("/give-gift/{id}")

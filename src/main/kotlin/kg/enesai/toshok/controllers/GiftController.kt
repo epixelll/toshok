@@ -5,6 +5,7 @@ import kg.enesai.toshok.dtos.GiftCreateForm
 import kg.enesai.toshok.services.AccountService
 import kg.enesai.toshok.services.GiftService
 import kg.enesai.toshok.services.RegionService
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -21,8 +22,10 @@ class GiftController(
 ) {
     @GetMapping("/gift-needed")
     fun getGiftNeeded(@ModelAttribute("accountSearchDto") accountSearchDto: AccountSearchDto, pageable: Pageable, model: Model): String {
+        val accountsPage = accountService.findAllGiftNeededAccounts(accountSearchDto, pageable)
         model.addAttribute("accounts", accountService.findAllGiftNeededAccounts(accountSearchDto, pageable))
         model.addAttribute("regions", regionService.findAll())
+        if(pageable.pageNumber >= accountsPage.totalPages) model.addAttribute("pageable", PageRequest.of(accountsPage.totalPages, pageable.pageSize))
         return "gift/giftNeededAccountList"
     }
 

@@ -57,6 +57,7 @@
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Чектин Суроту</label>
                                     <input th:field="*{checkPhoto}" type="file" value="" placeholder="Чектин Суроту" class="form-control input-lg">
+                                    <span th:if="${#fields.hasErrors('checkPhoto')}" th:errors="*{checkPhoto}" class="text-red">Check photo can't be null</span>
                                 </div>
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Паспорт Номуру</label>
@@ -71,6 +72,11 @@
                                     </select>
                                     <span th:if="${#fields.hasErrors('regionId')}" th:errors="*{regionId}" class="text-red">Region should be selected</span>
                                 </div>
+                                <div class="checkbox col-md-12 form-group">
+                                    <label class="no-margin">
+                                        <input th:field="*{topOfHierarchy}" type="checkbox">
+                                        <small> Өз алдынча катталуу </small> </label>
+                                </div>
                                 <div class="col-md-12 form-group">
                                     <label class="sr-only">Ким аркылуу катталганы</label>
                                     <select id="searchable-parent" th:field="*{parentId}">
@@ -81,7 +87,7 @@
 
                                 <hr/>
                                 <div class="col-md-12 form-group">
-                                    <label class="sr-only">Колдонуучу/Тел номуру</label>
+                                    <label class="sr-only">Тел номуру</label>
                                     <input th:field="*{phoneNumber}" type="text" value="" placeholder="Колдонуучу/Тел номуру" class="form-control input-lg">
                                     <span th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="text-red">Phone number range (9-13)</span>
                                 </div>

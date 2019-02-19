@@ -1,13 +1,12 @@
 package kg.enesai.toshok.dtos
 
-import kg.enesai.toshok.validators.FourApprovedChilds
-import kg.enesai.toshok.validators.UniqueFullname
-import kg.enesai.toshok.validators.UniqueUsername
+import kg.enesai.toshok.validators.*
 import org.springframework.web.multipart.MultipartFile
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
+@ParentNotNull
 data class RegisterForm(
         @field:NotBlank
         @field:UniqueFullname
@@ -18,6 +17,7 @@ data class RegisterForm(
 
         var checkNumber: String?,
 
+        @MultipartNotNull
         var checkPhoto: MultipartFile?,
 
         @field:NotBlank
@@ -25,6 +25,9 @@ data class RegisterForm(
 
         @field:NotNull
         var regionId: Int?,
+
+        @NotNull
+        var topOfHierarchy: Boolean = false,
 
         @field:FourApprovedChilds
         var parentId: Int?,
