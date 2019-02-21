@@ -54,4 +54,5 @@ interface UserRepository : JpaRepository<User, Int>{
 
 interface GiftRepository: JpaRepository<Gift, Int>{
     fun findAllByAccountId(accountId: Int): List<Gift>
+    fun deleteByAccount(account: Account)
 }

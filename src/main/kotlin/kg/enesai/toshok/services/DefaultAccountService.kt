@@ -5,6 +5,7 @@ import kg.enesai.toshok.dtos.*
 import kg.enesai.toshok.enums.AccountStatus
 import kg.enesai.toshok.enums.Permission
 import kg.enesai.toshok.repositories.AccountRepository
+import kg.enesai.toshok.repositories.GiftRepository
 import kg.enesai.toshok.repositories.UserRepository
 import kg.enesai.toshok.services.endpoint.FileUploadEndpointService
 import org.springframework.data.domain.Page
@@ -22,7 +23,8 @@ class DefaultAccountService(
         private val regionService: RegionService,
         private val fileUploadEndpointService: FileUploadEndpointService,
         private val currentUserService: CurrentUserService,
-        private val userRepository: UserRepository
+        private val userRepository: UserRepository,
+        private val giftRepository: GiftRepository
 ) : AccountService {
     @Transactional(readOnly = true)
     override fun findAll(): List<AccountDto> {
@@ -147,7 +149,8 @@ class DefaultAccountService(
         val account = accountRepository.findById(id).orElseThrow { EntityNotFoundException("""Account with id = $id not found""") }
         if(!currentUserService.currentUserHasPermission(Permission.ACCOUNT_DELETE_APPROVED) && account.status == AccountStatus.APPROVED)
             throw IllegalAccessException("You don't have permission to delete Approved accounts")
-        val users = userRepository.deleteByAccount(account)
+        userRepository.deleteByAccount(account)
+        giftRepository.deleteByAccount(account)
         accountRepository.removeChildsByParentId(id)
         account.parent?.let { updateParentLevels(it) }
         accountRepository.deleteById(id)
