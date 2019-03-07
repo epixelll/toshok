@@ -1,6 +1,5 @@
 package kg.enesai.toshok.services
 
-import kg.enesai.toshok.domains.Account
 import kg.enesai.toshok.domains.Gift
 import kg.enesai.toshok.dtos.GiftCreateForm
 import kg.enesai.toshok.dtos.GiftDto

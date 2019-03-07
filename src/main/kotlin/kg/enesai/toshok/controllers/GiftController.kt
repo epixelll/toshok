@@ -23,7 +23,7 @@ class GiftController(
     @GetMapping("/gift-needed")
     fun getGiftNeeded(@ModelAttribute("accountSearchDto") accountSearchDto: AccountSearchDto, pageable: Pageable, model: Model): String {
         val accountsPage = accountService.findAllGiftNeededAccounts(accountSearchDto, pageable)
-        model.addAttribute("accounts", accountService.findAllGiftNeededAccounts(accountSearchDto, pageable))
+        model.addAttribute("accounts", accountsPage)
         model.addAttribute("regions", regionService.findAll())
         if(pageable.pageNumber >= accountsPage.totalPages) model.addAttribute("pageable", PageRequest.of(accountsPage.totalPages, pageable.pageSize))
         return "gift/giftNeededAccountList"

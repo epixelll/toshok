@@ -75,19 +75,19 @@
                             <thead>
                             <tr>
                                 <th>N:</th>
-                                <th>Статусу</th>
                                 <th>Аты жөнү</th>
                                 <th>Баскычы</th>
+                                <th>Катталган күнү</th>
                                 <th>Тел номуру:</th>
                                 <th>Башкаруу</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="account, iter : ${accounts.content}">
+                            <tr th:each="account, iter : ${accounts.content}" th:classappend="${account.status != T(kg.enesai.toshok.enums.AccountStatus).APPROVED} ? bg-danger : bawka ">
                                 <td th:text="${iter.index + 1}">Number</td>
-                                <td th:text="${account.status.kyrName}">Fullname</td>
                                 <td th:text="${account.fullname}">Fullname</td>
                                 <td th:text="${account.level}">Region</td>
+                                <td th:text="${#temporals.format(account.registeredDate, 'dd.MM.yyyy')}">date</td>
                                 <td th:text="${account.phoneNumber}">Phone number</td>
                                 <td>
                                     <a type="button" class="btn btn-info" th:href="@{'/account/info/' + ${account.id}}">

@@ -56,7 +56,11 @@
                             <tbody>
                             <tr th:each="account, iter : ${accounts.content}">
                                 <td th:text="${iter.index + 1}">Number</td>
-                                <td th:text="${account.fullname}">Fullname</td>
+                                <td>
+                                    <a th:href="@{'/account/info/' + ${account.id}}">
+                                        <span th:text="${account.fullname}"></span>
+                                    </a>
+                                </td>
                                 <td th:text="${#temporals.format(account.registeredDate, 'dd.MM.yyyy')}">date</td>
                                 <td th:text="${account.checkNumber}">Check Number</td>
                                 <td th:with="checkImage=${'<img src=''/' + account.checkPath + '''>'}">
@@ -65,7 +69,11 @@
                                     <button th:if="${account.checkPath != null}" type="button" class="btn btn-sm btn-info" data-toggle="popover" data-placement="right" title="" th:data-content="${checkImage}" >Чек сүрөтү</button>
                                 </td>
                                 <td th:text="${account.phoneNumber}">Phone number</td>
-                                <td th:text="${account.parentName}">Parent name</td>
+                                <td>
+                                    <a th:href="@{'/account/info/' + ${account.parentId}}">
+                                        <span th:text="${account.parentName}"></span>
+                                    </a>
+                                </td>
                                 <td>
                                     <button th:if="${account.parentStatus != null && account.parentStatus != T(kg.enesai.toshok.enums.AccountStatus).APPROVED}"
                                             type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="" data-original-title="Байланган кишиси тастыктала элек"><i class="fa fa-info"></i></button>
