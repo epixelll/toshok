@@ -17,7 +17,7 @@ class DefaultFileUploadEndpointService: FileUploadEndpointService {
     override fun saveUploadedFile(file: MultipartFile): String? {
         return if (!file.isEmpty) {
             val bytes = file.bytes
-            val fileName = RandomStringUtils.randomAlphabetic(8) + "-" + file.originalFilename
+            val fileName = RandomStringUtils.randomAlphabetic(8) + "-" + file.originalFilename?.replace("\\s+".toRegex(),"")
             val path = Paths.get(UPLOADED_FOLDER + fileName)
             Files.write(path, bytes)
             fileName
