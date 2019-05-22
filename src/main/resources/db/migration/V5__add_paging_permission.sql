@@ -1,0 +1,1 @@
+insert into roles_permissions(role_id, permission) values (1, 'PAGINATION');

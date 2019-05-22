@@ -9,5 +9,6 @@ enum class Permission {
     USER_CREATE_ALL,
     USER_UPDATE_ALL,
     USER_DELETE_ALL,
-    GIFT_VIEW
+    GIFT_VIEW,
+    PAGINATION
 }

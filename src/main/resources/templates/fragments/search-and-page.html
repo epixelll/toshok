@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <body>
 
 <nav th:fragment="pagination" class="text-center m-t-5">
-    <ul class="pagination">
+    <ul sec:authorize="hasAuthority('PAGINATION')" class="pagination">
         <li th:class="${pglst.number eq 0} ? 'disabled' : ''">
             <a th:if="${not pglst.first}" th:onclick="'setPaginationAndCallSearch(' + ${pglst.number-1} +', ' + ${pglst.size} + ')'" aria-label="Previous"> <span aria-hidden="true"><i class="fa fa-angle-left"></i></span> </a>
             <a th:if="${pglst.first}" href="javascript:void(0);" aria-label="Previous"> <span aria-hidden="true"><i class="fa fa-angle-left"></i></span> </a>
